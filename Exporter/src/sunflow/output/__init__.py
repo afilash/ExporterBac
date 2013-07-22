@@ -20,61 +20,30 @@
 # --------------------------------------------------------------------------
 # Blender Version                     2.68
 # Exporter Version                    0.0.1
-# Created on                          19-Jul-2013
+# Created on                          22-Jul-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
 
-# System libs
-import os, time, threading, sys, copy, subprocess
+import os
+import bpy
+from extensions_framework import log
+from extensions_framework.util import TimerThread
 
-# Blender libs
-import bpy, bl_ui
+def sfrsLog(*args, popup=False):
+    '''
+    Send string to EF log, marked as belonging to sfrs module.
+    Accepts variable args 
+    '''
+    if len(args) > 0:
+        log(' '.join(['%s'%a for a in args]), module_name='sfrs', popup=popup)
 
-# Framework libs
-from extensions_framework import util as efutil
-
-from .. import SunflowAddon, plugin_path
-
-from ..outputs import sfrsLog , sfrsFilmDisplay
-
-
-
-
-
-
-
-#
-#
-#from ..export import (get_instance_materials, 
-#        resolution, MtsLaunch)
-#
-#from ..export.scene import SceneExporter
-#
-#from ..properties import (
-#    engine, sampler, integrator, lamp, texture,
-#    material, mesh, camera, world
-#)
-#
-#from ..ui import (
-#    render, render_layer, lamps, materials, mesh, 
-#    camera, world
-#)
-#
-#from ..ui.textures import (
-#    main, bitmap, checkerboard, gridtexture, mapping, scale, wireframe
-#)
-#
-#from ..ui.materials import (
-#    main, subsurface, medium, emitter
-#)
-#
-#from .. import operators
-#
-
-
-
-
-
-
-if __name__ == '__main__':
+class sfrsFilmDisplay(TimerThread):
+    '''
+    Periodically update render result with sfrs's framebuffer
+    '''
+    
+    #===========================================================================
+    # TODO
+    # don't know how to implement in the current situation
+    #===========================================================================
     pass

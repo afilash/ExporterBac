@@ -45,6 +45,8 @@ bl_info = {
     "link"       : "http://sunflow.sourceforge.net/"
     }
 
+def plugin_path():
+    return os.path.dirname(os.path.realpath(__file__))
 
 if 'core' in locals():
     import imp
@@ -53,11 +55,12 @@ else:
     import bpy
     
     from extensions_framework import Addon
-    SunflowAddon = Addon(bl_info)
-    register, unregister = SunflowAddon.init_functions()
+    sfrsAddon = Addon(bl_info)
+    register, unregister = sfrsAddon.init_functions()
     
     # Importing the core package causes extensions_framework managed
-    # RNA class registration via @SunflowAddon.addon_register_class
+    # RNA class registration via @sfrsAddon.addon_register_class
     from . import core
     
-#EOF#
+if __name__ == '__main__':
+    pass
