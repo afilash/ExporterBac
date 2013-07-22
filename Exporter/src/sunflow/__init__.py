@@ -25,5 +25,39 @@
 # --------------------------------------------------------------------------
 
 
-if __name__ == '__main__':
-    pass
+import os
+
+bl_info = {
+    "name"       : "Sunflow",
+    "description": "Sunflow Render System (v0.07.2) integration for Blender 2.6X",
+    "author"     : "Nodebench , Christopher Kulla",
+    "version"    : (0, 0, 1),
+    "blender"    : (2, 67, 0),    
+    "api"        : 57908,
+    "category"   : "Render",
+    "location"   : "Info header, render engine menu",    
+    "warning"    : "Development version, may crash",
+    "wiki_url"   : "http://sfwiki.geneome.net/",
+    "tracker_url": "https://github.com/nodebench/Exporter/issues",
+    "tooltip"    : "Sunflow Render System (v0.07.2) Exporter",
+    "license"    : "GPL Version 2",
+    "download"   : "https://github.com/nodebench/Exporter.git",
+    "link"       : "http://sunflow.sourceforge.net/"
+    }
+
+
+if 'core' in locals():
+    import imp
+    imp.reload(core)
+else:
+    import bpy
+    
+    from extensions_framework import Addon
+    SunflowAddon = Addon(bl_info)
+    register, unregister = SunflowAddon.init_functions()
+    
+    # Importing the core package causes extensions_framework managed
+    # RNA class registration via @SunflowAddon.addon_register_class
+    from . import core
+    
+#EOF#
