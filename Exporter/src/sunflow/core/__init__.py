@@ -72,13 +72,13 @@ from ..export import (get_instance_materials, resolution, sunflowLaunch)
 
 @SunflowAddon.addon_register_class
 class RENDERENGINE_sunflow(bpy.types.RenderEngine):
-   bl_idname           = 'SUNFLOW_RENDER'
-   bl_label            = 'Sunflow'
-   bl_use_preview      = True
+    bl_idname           = 'SUNFLOW_RENDER'
+    bl_label            = 'Sunflow'
+    bl_use_preview      = True
   
-   
-   def render(self, scene):
-       print("Press RENDER")
+  
+    def render(self, scene):
+        print("Press RENDER")
 
 
 
