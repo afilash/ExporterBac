@@ -24,6 +24,8 @@
 # Author                              NodeBench
 # --------------------------------------------------------------------------
 
+
+
 # System libs
 import os, time, threading, sys, copy, subprocess
 
@@ -35,44 +37,48 @@ from extensions_framework import util as efutil
 
 from .. import SunflowAddon, plugin_path
 
-from ..outputs import sfrsLog , sfrsFilmDisplay
+#TODO sfrsFilmDisplay
+from ..outputs import sunflowLog , sunflowFilmDisplay
+
+from ..export import (get_instance_materials, resolution, sunflowLaunch)
 
 
 
-
-
-
-
-#
-#
-#from ..export import (get_instance_materials, 
-#        resolution, MtsLaunch)
-#
 #from ..export.scene import SceneExporter
 #
+
 #from ..properties import (
 #    engine, sampler, integrator, lamp, texture,
 #    material, mesh, camera, world
 #)
 #
+
 #from ..ui import (
 #    render, render_layer, lamps, materials, mesh, 
 #    camera, world
 #)
 #
-#from ..ui.textures import (
-#    main, bitmap, checkerboard, gridtexture, mapping, scale, wireframe
-#)
-#
+
+
 #from ..ui.materials import (
 #    main, subsurface, medium, emitter
 #)
 #
+
 #from .. import operators
 #
 
 
 
+@SunflowAddon.addon_register_class
+class RENDERENGINE_sunflow(bpy.types.RenderEngine):
+   bl_idname           = 'SUNFLOW_RENDER'
+   bl_label            = 'Sunflow'
+   bl_use_preview      = True
+  
+   
+   def render(self, scene):
+       print("Press RENDER")
 
 
 

@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
+encoding//src/copyfiles.py=utf8
 encoding//src/sunflow/__init__.py=utf8
 encoding//src/sunflow/core/__init__.py=utf8
 encoding//src/sunflow/export/__init__.py=utf8
-encoding//src/sunflow/output/__init__.py=utf8
+encoding//src/sunflow/outputs/__init__.py=utf8
 encoding//src/sunflow/ui/__init__.py=utf8

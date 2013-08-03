@@ -29,17 +29,17 @@ import bpy
 from extensions_framework import log
 from extensions_framework.util import TimerThread
 
-def sfrsLog(*args, popup=False):
+def sunflowLog(*args, popup=False):
     '''
-    Send string to EF log, marked as belonging to sfrs module.
+    Send string to EF log, marked as belonging to sunflow module.
     Accepts variable args 
     '''
     if len(args) > 0:
-        log(' '.join(['%s'%a for a in args]), module_name='sfrs', popup=popup)
+        log(' '.join(['%s'%a for a in args]), module_name='sunflow', popup=popup)
 
-class sfrsFilmDisplay(TimerThread):
+class sunflowFilmDisplay(TimerThread):
     '''
-    Periodically update render result with sfrs's framebuffer
+    Periodically update render result with sunflow's framebuffer
     '''
     
     #===========================================================================

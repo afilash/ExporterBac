@@ -27,6 +27,14 @@
 
 import os
 import shutil
+import subprocess
+
+
+
+BLENDER_PATH= "E:\\Graphics\\BlenderFoundation\\blender-2.68-RC1-windows32\\blender.exe"
+FILE_PATH = "E:\\DevelProjects\\gitRepository\\sfrsTest\\sfrsTest\\src\\blends\\casestudies\\testblender.blend"
+
+
 
 def copyroot():
     dest_dir =r"C:\Users\AppleCart\AppData\Roaming\Blender Foundation\Blender\2.67\scripts\addons\sunflow"
@@ -44,6 +52,13 @@ def copyroot():
         shutil.rmtree(path=dest_dir )
     print ("Copying directory  %s"  %(source_dir))
     shutil.copytree(source_dir, dest_dir)
+    
+    print("Copy Done!")
+    
+    subprocess.call([BLENDER_PATH,FILE_PATH])
+    
+    print ("Finished!")
+    
     
 def pathprt():
     print os.curdir
