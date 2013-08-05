@@ -40,6 +40,18 @@ class SunflowRenderPanel(RenderButtonsPanel, property_group_renderer):
     '''
     COMPAT_ENGINES = { 'SUNFLOW_RENDER' }
 
+
+@SunflowAddon.addon_register_class
+class SunflowRender_PT_integrator(SunflowRenderPanel):
+    bl_label = "Global Illumination"
+    #bl_options = {'DEFAULT_CLOSED'}
+    
+    display_property_groups = [
+        ( ('scene',), 'sunflow_integrator' )
+    ]
+    
+
+
 @SunflowAddon.addon_register_class
 class SunflowRender_PT_output(SunflowRenderPanel):
     bl_label = "Output"
@@ -113,7 +125,7 @@ class SunflowRender_PT_performance(SunflowRenderPanel):
 @SunflowAddon.addon_register_class
 class SunflowRender_PT_antialiasing(SunflowRenderPanel):
     bl_label = "Anti Aliasing"
-    #bl_options = {'DEFAULT_CLOSED'}
+    bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
         ( ('scene',), 'sunflow_antialiasing' )
@@ -123,7 +135,7 @@ class SunflowRender_PT_antialiasing(SunflowRenderPanel):
 @SunflowAddon.addon_register_class
 class SunflowRender_PT_tracing(SunflowRenderPanel):
     bl_label = "Tracing"
-    #bl_options = {'DEFAULT_CLOSED'}
+    bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
         ( ('scene',), 'sunflow_tracing' )

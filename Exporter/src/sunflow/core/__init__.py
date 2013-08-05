@@ -48,11 +48,11 @@ from ..export import (get_instance_materials, resolution, sunflowLaunch)
 #
 
 
-from ..properties import (camera , render)
+from ..properties import (camera , render , integrator)
 
 #from ..properties import (
-#    engine, sampler, integrator, lamp, texture,
-#    material, mesh, camera, world
+#    engine, sampler, , lamp, texture,
+#    material, mesh, , world
 #)
 #
 

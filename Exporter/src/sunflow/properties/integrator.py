@@ -31,6 +31,7 @@ from extensions_framework import declarative_property_group
 from extensions_framework import util as efutil
 from extensions_framework.validate import Logic_OR as LOR, Logic_AND as LAND
 
+@SunflowAddon.addon_register_class
 class sunflow_integrator(declarative_property_group):
     """ Defines the global illumination types of used with sunflow. There are 
     five types of global illumination supported with sunflow.
@@ -45,12 +46,13 @@ class sunflow_integrator(declarative_property_group):
     ef_attach_to = ['Scene']
     controls = [
                 'globalIllumination',
+                'giOverride',
                 'fgSpacingMin',
                 'fgSpacingMax',
                 'fgSamples',
                 'fgTolerance',
                 'secondaryBounces',
-                'globalTree',
+                'globalMapping',
                 'globalPhotons',
                 'globalPhotonsEstimate',
                 'globalPhotonsRadius',
@@ -61,17 +63,40 @@ class sunflow_integrator(declarative_property_group):
                 'pathTracingSamples',
                 'occlusionSamples',
                 'occlusionDistance',
+                'occlusionBrightText',
                 'occlusionBright',
+                'occlusionDarkText',
                 'occlusionDark',
                 'fakeAOuppositionVector',
+                'fakeAOSkyText',
                 'fakeAOSky',
+                'fakeAOGroundText',
                 'fakeAOGround',                
                 ]
     visibility = {}
     enabled = {}
     alert = {}
-    properties = [
-             
+    properties = [    
+        {
+            'type': 'text',
+            'attr': 'occlusionBrightText',
+            'name': 'Bright colour:',
+        },  
+        {
+            'type': 'text',
+            'attr': 'occlusionDarkText',
+            'name': 'Dark colour:',
+        },  
+        {
+            'type': 'text',
+            'attr': 'fakeAOSkyText',
+            'name': 'Sky colour:',
+        },
+        {
+            'type': 'text',
+            'attr': 'fakeAOGroundText',
+            'name': 'Ground colour:',
+        },      
         {
             'type': 'enum',
             'attr': 'globalIllumination',
@@ -93,12 +118,13 @@ class sunflow_integrator(declarative_property_group):
             'attr': 'giOverride',
             'name': 'Gi Override',
             'description': 'override the global photons and global illumination to render only these feature’s contribution to the scene (so you can fine tune your settings).',
-            'default': 'none',
+            'default': 'fullrender',
             'items': [
                 ('fullrender', 'Full Render', 'No Overriding'), 
                 ('gionly', 'Gi only', 'To view the gi in the scene'),
-                ('photonsonly', 'Photons only', ' To view global photons you would us'),                             
+                ('photonsonly', 'Photons only', 'To view global photons you would us'),                             
             ],
+            'expand' : True,
             'save_in_preset': True
         },
         {
@@ -187,8 +213,8 @@ class sunflow_integrator(declarative_property_group):
             'name': 'Radius',
             'description': 'Estimation sphere radius (default 0.5).',
             'save_in_preset': True,
-            'min': 0,
-            'max': 100,
+            'min': 0.0,
+            'max': 100.0,
             'default': 0.5
         },                       
         {
@@ -268,13 +294,14 @@ class sunflow_integrator(declarative_property_group):
             'type': 'enum',
             'attr': 'occlusionBright',
             'name': 'Bright Color',
-            'description': 'Assign Bright color from world properties Horizon -or- Zenith -or- Ambient Colors (default Zenith).',
-            'default': 'zenith',
+            'description': 'Assign Bright color from world properties Horizon -or- Zenith -or- Ambient Colors (default Ambient).',
+            'default': 'ambient',
             'items': [
                 ('horizon', 'Horizon', 'World Horizon Color'),
                 ('zenith', 'Zenith', 'World Zenith Color'),
                 ('ambient', 'Ambient', 'World Ambient Color'),
             ],
+            'expand' : True,
             'save_in_preset': True
         },
         {
@@ -288,6 +315,7 @@ class sunflow_integrator(declarative_property_group):
                 ('zenith', 'Zenith', 'World Zenith Color'),
                 ('ambient', 'Ambient', 'World Ambient Color'),
             ],
+            'expand' : True,
             'save_in_preset': True
         },
         {
@@ -304,7 +332,7 @@ class sunflow_integrator(declarative_property_group):
             'src': lambda s,c: s.scene,
             'src_attr': 'objects',
             'trg': lambda s,c: c.sunflow_integrator,
-            'trg_attr': 'dummy_variable',
+            'trg_attr': 'upVectorEmpty',
             'description': 'Position of this Empty with respect to origin will give the up direction vector for fake ambient occlusion (must be an EMPTY)' ,
             'save_in_preset': True
         },
@@ -319,6 +347,7 @@ class sunflow_integrator(declarative_property_group):
                 ('zenith', 'Zenith', 'World Zenith Color'),
                 ('ambient', 'Ambient', 'World Ambient Color'),
             ],
+            'expand' : True,
             'save_in_preset': True
         },
         {
@@ -332,6 +361,7 @@ class sunflow_integrator(declarative_property_group):
                 ('zenith', 'Zenith', 'World Zenith Color'),
                 ('ambient', 'Ambient', 'World Ambient Color'),
             ],
+            'expand' : True,
             'save_in_preset': True
         },
                   ]
