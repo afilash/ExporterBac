@@ -47,11 +47,20 @@ from ..export import (get_instance_materials, resolution, sunflowLaunch)
 #from ..export.scene import SceneExporter
 #
 
+
+from ..properties import (camera , render)
+
 #from ..properties import (
 #    engine, sampler, integrator, lamp, texture,
 #    material, mesh, camera, world
 #)
 #
+
+
+
+
+
+from ..ui import (render)
 
 #from ..ui import (
 #    render, render_layer, lamps, materials, mesh, 
@@ -69,6 +78,52 @@ from ..export import (get_instance_materials, resolution, sunflowLaunch)
 #
 
 
+def _register_elm(elm, required=False):
+    try:
+        elm.COMPAT_ENGINES.add('SUNFLOW_RENDER')
+    except:
+        pass
+
+def compatible(mod):
+    mod = getattr(bl_ui, mod)
+    for subclass in mod.__dict__.values():
+        _register_elm(subclass)
+    del mod
+    
+
+# Add standard Blender Interface elements
+_register_elm(bl_ui.properties_render.RENDER_PT_render, required=True)
+_register_elm(bl_ui.properties_render.RENDER_PT_dimensions, required=True)
+
+_register_elm(bl_ui.properties_scene.SCENE_PT_scene, required=True)
+_register_elm(bl_ui.properties_scene.SCENE_PT_audio)
+_register_elm(bl_ui.properties_scene.SCENE_PT_physics) #This is the gravity panel
+_register_elm(bl_ui.properties_scene.SCENE_PT_keying_sets)
+_register_elm(bl_ui.properties_scene.SCENE_PT_keying_set_paths)
+_register_elm(bl_ui.properties_scene.SCENE_PT_unit)
+_register_elm(bl_ui.properties_scene.SCENE_PT_color_management)
+_register_elm(bl_ui.properties_scene.SCENE_PT_rigid_body_world)
+_register_elm(bl_ui.properties_scene.SCENE_PT_custom_props)
+
+_register_elm(bl_ui.properties_world.WORLD_PT_context_world, required=True)
+
+_register_elm(bl_ui.properties_material.MATERIAL_PT_preview)
+_register_elm(bl_ui.properties_texture.TEXTURE_PT_preview)
+
+_register_elm(bl_ui.properties_data_lamp.DATA_PT_context_lamp)
+    
+    
+    
+    
+    
+
+# DEFAULT PANELS
+compatible("properties_data_mesh")
+compatible("properties_data_camera")
+compatible("properties_particle")
+compatible("properties_data_speaker")    
+    
+    
 
 @SunflowAddon.addon_register_class
 class RENDERENGINE_sunflow(bpy.types.RenderEngine):

@@ -31,8 +31,8 @@ import subprocess
 
 
 
-BLENDER_PATH= "E:\\Graphics\\BlenderFoundation\\blender-2.68-RC1-windows32\\blender.exe"
-FILE_PATH = "E:\\DevelProjects\\gitRepository\\sfrsTest\\sfrsTest\\src\\blends\\casestudies\\testblender.blend"
+BLENDER_PATH= r"E:/Graphics/BlenderFoundation/blender-2.68-RC1-windows32/blender.exe"
+FILE_PATH = r"E:/DevelProjects/gitRepository/sfrsTest/sfrsTest/src/blends/casestudies/testblender.blend"
 
 
 
@@ -53,12 +53,7 @@ def copyroot():
     print ("Copying directory  %s"  %(source_dir))
     shutil.copytree(source_dir, dest_dir)
     
-    print("Copy Done!")
-    
-    subprocess.call([BLENDER_PATH,FILE_PATH])
-    
-    print ("Finished!")
-    
+    print("Done!")
     
 def pathprt():
     print os.curdir
