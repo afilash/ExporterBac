@@ -24,12 +24,14 @@
 # Author                              NodeBench
 # --------------------------------------------------------------------------
 
+
 from .. import SunflowAddon
 
 from extensions_framework import declarative_property_group
 from extensions_framework import util as efutil
 
-
+#def getEmpties(s,c):
+#    return [object for object in s.scene.objects[:] if object.type == 'EMPTY']
 
 @SunflowAddon.addon_register_class
 class sunflow_performance(declarative_property_group):
@@ -193,6 +195,7 @@ class sunflow_tracing(declarative_property_group):
     
     """
     ef_attach_to = ['Scene']   
+
     controls = [
                 [0.4,'diffuseBouncesText', 'diffuseBounces'],
                 [0.4,'reflectionDepthText', 'reflectionDepth'],
@@ -201,6 +204,7 @@ class sunflow_tracing(declarative_property_group):
                 [0.4,'causticPhotonsText', 'causticPhotons'],
                 [0.4,'estimationPhotonsText', 'estimationPhotons'],
                 [0.4,'estimationRadiusText', 'estimationRadius'],
+                #'Does_it_Work',
                 ]                   
     visibility = {
                   'causticPhotonsText'      : { 'useCaustics': True },
@@ -312,6 +316,45 @@ class sunflow_tracing(declarative_property_group):
             'max': 100,
             'default': 0.5
          },
+
         ]
-    
-    
+   
+   
+   
+#        {
+#            'attr': 'dummy_variable',
+#            'type': 'string',
+#            'name': 'dummy_variable',
+#            'description': 'dummy_variable leave blank ' ,
+#            'save_in_preset': True
+#        },
+#        {
+#            'type': 'prop_search',
+#            'attr': 'Does_it_Work',
+#            'src': getEmpties,
+#            'src_attr': 'objects',
+#            'trg': lambda s,c: c.sunflow_tracing,
+#            'trg_attr': 'dummy_variable',
+#            'name': 'testing'
+#         },
+#        
+        
+#         {
+#            'type': 'prop_search',
+#            'attr': 'Does_it_Work',
+#            'src': lambda s,c: s.scene,
+#            'src_attr': 'objects',
+#            'trg': lambda s,c: c.sunflow_tracing,
+#            'trg_attr': 'dummy_variable',
+#            'name': 'testing'
+#         },
+
+#        {
+#            'type': 'prop_search',
+#            'attr': 'Does_it_Work',
+#            'src': lambda s,c: bpy.data,
+#            'src_attr': 'groups',
+#            'trg': lambda s,c: c.sunflow_tracing,
+#            'trg_attr': 'dummy_variable',
+#            'name': 'testing'
+#         }, 
