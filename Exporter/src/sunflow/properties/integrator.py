@@ -45,35 +45,74 @@ class sunflow_integrator(declarative_property_group):
 
     ef_attach_to = ['Scene']
     controls = [
-                'globalIllumination',
                 'giOverride',
-                'fgSpacingMin',
-                'fgSpacingMax',
-                'fgSamples',
-                'fgTolerance',
+                'globalIllumination', 
+                #FINALGATHER               
+                ['fgSpacingMin',
+                 'fgSpacingMax'],
+                ['fgSamples',
+                 'fgTolerance'],
                 'secondaryBounces',
+                #FINALGATHER PHOTONS
                 'globalMapping',
                 'globalPhotons',
-                'globalPhotonsEstimate',
-                'globalPhotonsRadius',
-                'instantSets',
-                'instantSamples',
-                'instantPercentBias',
-                'instantBiasSamples',
+                ['globalPhotonsEstimate',
+                'globalPhotonsRadius'],
+                #IGI
+                ['instantSets',
+                'instantSamples'],
+                ['instantPercentBias',
+                'instantBiasSamples'],
+                #PATHTRACING
                 'pathTracingSamples',
-                'occlusionSamples',
-                'occlusionDistance',
+                #AO
+                ['occlusionSamples',
+                'occlusionDistance'],
                 'occlusionBrightText',
                 'occlusionBright',
                 'occlusionDarkText',
                 'occlusionDark',
+                #FAKEAO
                 'fakeAOuppositionVector',
                 'fakeAOSkyText',
                 'fakeAOSky',
                 'fakeAOGroundText',
                 'fakeAOGround',                
                 ]
-    visibility = {}
+    visibility = {
+                'giOverride'            :{ 'globalIllumination': LOR(['finalgathering', 'instantgi', 'pathtracing' ,'ambientocclusion','fakeambient'])},
+                #FINALGATHER               
+                'fgSpacingMin'          :{ 'globalIllumination':'finalgathering'},
+                'fgSpacingMax'          :{ 'globalIllumination':'finalgathering'},
+                'fgSamples'             :{ 'globalIllumination':'finalgathering'},
+                'fgTolerance'           :{ 'globalIllumination':'finalgathering'},
+                'secondaryBounces'      :{ 'globalIllumination':'finalgathering'},
+                #FINALGATHER PHOTONS
+                'globalMapping'         :{ 'globalIllumination':'finalgathering' , 'secondaryBounces':True},
+                'globalPhotons'         :{ 'globalIllumination':'finalgathering' , 'secondaryBounces':True},
+                'globalPhotonsEstimate' :{ 'globalIllumination':'finalgathering' , 'secondaryBounces':True},
+                'globalPhotonsRadius'   :{ 'globalIllumination':'finalgathering' , 'secondaryBounces':True},
+                #IGI
+                'instantSets'           :{ 'globalIllumination':'instantgi'},
+                'instantSamples'        :{ 'globalIllumination':'instantgi'},
+                'instantPercentBias'    :{ 'globalIllumination':'instantgi'},
+                'instantBiasSamples'    :{ 'globalIllumination':'instantgi'},
+                #PATHTRACING
+                'pathTracingSamples'    :{ 'globalIllumination':'pathtracing'},
+                #AO
+                'occlusionSamples'      :{ 'globalIllumination':'ambientocclusion'},
+                'occlusionDistance'     :{ 'globalIllumination':'ambientocclusion'},
+                'occlusionBrightText'   :{ 'globalIllumination':'ambientocclusion'},
+                'occlusionBright'       :{ 'globalIllumination':'ambientocclusion'},
+                'occlusionDarkText'     :{ 'globalIllumination':'ambientocclusion'},
+                'occlusionDark'         :{ 'globalIllumination':'ambientocclusion'},
+                #FAKEAO
+                'fakeAOuppositionVector':{ 'globalIllumination':'fakeambient'},
+                'fakeAOSkyText'         :{ 'globalIllumination':'fakeambient'},
+                'fakeAOSky'             :{ 'globalIllumination':'fakeambient'},
+                'fakeAOGroundText'      :{ 'globalIllumination':'fakeambient'},
+                'fakeAOGround'          :{ 'globalIllumination':'fakeambient'}
+                  }
     enabled = {}
     alert = {}
     properties = [    
@@ -183,7 +222,7 @@ class sunflow_integrator(declarative_property_group):
             'default': 'grid',
             'items': [
                 ('grid', 'Grid', 'grid'),
-                ('kd', 'Kd', 'kd tree')
+                ('kd', 'Kd Tree', 'kd tree')
             ],
             'save_in_preset': True
         },
@@ -245,6 +284,7 @@ class sunflow_integrator(declarative_property_group):
             'min': 0.0,
             'max': 100.0,
             'default': 1.0,
+            'slider': True,
             'save_in_preset': True
         },        
         {
@@ -284,7 +324,7 @@ class sunflow_integrator(declarative_property_group):
             'name': 'Distance',
             'description': 'Maximum distance of the objects to taken into consideration for occlusion (default 3.0).',
             'min': 0.0,
-            'max': 1000.0,
+            'max': 100.0,
             'default': 3.0,
             'slider': True,
             'save_in_preset': True
