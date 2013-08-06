@@ -51,6 +51,26 @@ class SunflowRender_PT_integrator(SunflowRenderPanel):
     ]
     
 
+@SunflowAddon.addon_register_class
+class SunflowRender_PT_antialiasing(SunflowRenderPanel):
+    bl_label = "Anti Aliasing"
+    bl_options = {'DEFAULT_CLOSED'}
+    
+    display_property_groups = [
+        ( ('scene',), 'sunflow_antialiasing' )
+    ]
+            
+
+@SunflowAddon.addon_register_class
+class SunflowRender_PT_tracing(SunflowRenderPanel):
+    bl_label = "Tracing"
+    bl_options = {'DEFAULT_CLOSED'}
+    
+    display_property_groups = [
+        ( ('scene',), 'sunflow_tracing' )
+    ]
+            
+
 
 @SunflowAddon.addon_register_class
 class SunflowRender_PT_output(SunflowRenderPanel):
@@ -121,24 +141,4 @@ class SunflowRender_PT_performance(SunflowRenderPanel):
         
         super().draw(context)
         
-
-@SunflowAddon.addon_register_class
-class SunflowRender_PT_antialiasing(SunflowRenderPanel):
-    bl_label = "Anti Aliasing"
-    bl_options = {'DEFAULT_CLOSED'}
-    
-    display_property_groups = [
-        ( ('scene',), 'sunflow_antialiasing' )
-    ]
-            
-
-@SunflowAddon.addon_register_class
-class SunflowRender_PT_tracing(SunflowRenderPanel):
-    bl_label = "Tracing"
-    bl_options = {'DEFAULT_CLOSED'}
-    
-    display_property_groups = [
-        ( ('scene',), 'sunflow_tracing' )
-    ]
-            
 
