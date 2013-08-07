@@ -24,7 +24,7 @@
 # Author                              NodeBench
 # --------------------------------------------------------------------------
 
-
+import bpy
 from .. import SunflowAddon
 
 from extensions_framework import declarative_property_group
@@ -85,3 +85,177 @@ class sunflow_film(declarative_property_group):
         },
                   ]
     
+@SunflowAddon.addon_register_class
+class sunflow_camera(declarative_property_group):
+    """ There are four camera types supported in sunflow Pinhole, Thinlens, 
+    Spherical, Fisheye. Pinhole is the normal perspective camera available with 
+    Blender. Thinlens is our special camera this is the only camera that support 
+    DOF, Bokeh effect etc, Spherical and Fisheye are the classical lens type 
+    available. All normal values like position of camera(eye), where the camera 
+    is looking at(target), rotation about the line joinig eye and target 
+    (up direction) are fetched from blender, camera field of vision and aspect 
+    ratios are also picked from blender. Special values like DOK shutter and 
+    Blades are implemented here.  
+    
+    """
+
+    ef_attach_to = ['Camera']
+                
+    controls = [     
+                'sunflowCameraText',
+                'cameraType',    
+                #DOF       
+                'dofEnabledScene',
+                'dofObject',
+                'aperture',
+                ['apertureBlades',
+                'bladeRotation'],
+                #CMBLUR
+                'cameraMBlur',
+                'cameraMBlurSteps',
+                #OMBLUR
+                'objectMBlur',
+                'objectMBlurGroup',
+                'shutterTime',
+                ]
+    visibility = {
+                   #DOF    
+                  'dofEnabledScene'         : { 'cameraType':'thinlens' },
+                  'dofObject'               : { 'cameraType':'thinlens' , 'dofEnabledScene': True },
+                  'aperture'                : { 'cameraType':'thinlens' , 'dofEnabledScene': True },
+                  'apertureBlades'          : { 'cameraType':'thinlens' , 'dofEnabledScene': True },
+                  'bladeRotation'           : { 'cameraType':'thinlens' , 'dofEnabledScene': True },
+                  #CMBLUR
+                  'cameraMBlur'             : { 'cameraType':'thinlens' },
+                  'cameraMBlurSteps'        : { 'cameraType':'thinlens' , 'cameraMBlur': True },
+                  #OMBLUR
+                  'objectMBlurGroup'        : { 'objectMBlur':True },
+                  'shutterTime'             : { 'objectMBlur':True },
+                  }
+    enabled = {}
+    alert = {}
+    properties = [   
+        {
+            'type': 'text',
+            'attr': 'sunflowCameraText',
+            'name': 'Sunflow Lens:',
+        },  
+        {
+            'type': 'bool',
+            'attr': 'dofEnabledScene',
+            'name': 'Depth of Field',
+            'description': 'This will enable Depth of Field using thin lens camera (default False).',
+            'default': False,            
+            'save_in_preset': True
+        },
+        {
+            'type': 'bool',
+            'attr': 'objectMBlur',
+            'name': 'Object Motion Blur',
+            'description': 'Use object motion blur.',
+            'default': False,            
+            'save_in_preset': True
+        }, 
+        {
+            'type': 'string',
+            'attr': 'objectMBlurGroupName',            
+            'name': 'objectMBlurGroupName',
+            'description': 'Current camera will motion blur objects in this group.' ,
+            'save_in_preset': True
+        },      
+        {
+            'type': 'prop_search',
+            'attr': 'objectMBlurGroup',
+            'name': 'Object Group',
+            'description': 'Current camera will motion blur objects in this group if they are animated.', 
+            'src': lambda s,c: bpy.data,
+            'src_attr': 'groups',
+            'trg': lambda s,c: c.sunflow_camera,
+            'trg_attr': 'objectMBlurGroupName',
+            'save_in_preset': True
+        }, 
+        {
+            'type': 'int',
+            'attr': 'shutterTime',
+            'name': 'Shutter Time',
+            'description': 'the times over which the moving camera is defined (default 1). ',            
+            'min': 0,
+            'max':   20,
+            'default': 1,
+            'save_in_preset': True
+        },
+        {
+            'type': 'bool',
+            'attr': 'cameraMBlur',
+            'name': 'Camera Motion Blur',
+            'description': 'Two types of motion blur available. This will enable camera motion blur using thin lens camera.',
+            'default': False,            
+            'save_in_preset': True
+        },  
+        {
+            'type': 'int',
+            'attr': 'cameraMBlurSteps',
+            'name': 'Blur Steps',
+            'description': 'The number of motion blur steps per frame (default 2). ',            
+            'min': 0,
+            'max':   100,
+            'default': 2,
+            'save_in_preset': True
+        },
+        {
+            'type': 'float',
+            'attr': 'aperture',
+            'name': 'Aperture',
+            'description': 'Radius of the aperture, Higher values gives more defocus (default 1.0).',
+            'min': 0.0,
+            'max': 100.0,
+            'default': 1.0,
+            'save_in_preset': True
+        }, 
+        {
+            'type': 'int',
+            'attr': 'apertureBlades',
+            'name': 'Blades',
+            'description': 'The number of blades in the aperture for polygonal bokeh (default 3). ',            
+            'min': 2,
+            'max':   10000,
+            'default': 3,
+            'save_in_preset': True
+        },
+        {
+            'type': 'float',
+            'attr': 'bladeRotation',
+            'name': 'Rotation',
+            'description': 'Angle of rotation of aperture blade (default 1.0).',
+            'min': 0.0,
+            'max': 360.0,
+            'default': 0.0,
+            'save_in_preset': True
+        },  
+        {
+            'type': 'enum',
+            'attr': 'cameraType',
+            'name': 'Camera Type',
+            'description': 'Sunflow camera type (default Pinhole).',
+            'default': 'pinhole',
+            'items': [
+                ('pinhole', 'Pinhole', 'The "standard" perspective camera.'), 
+                ('thinlens', 'Thinlens', 'This is our depth of field (dof) camera, which is also capable of doing bokeh effects.'),
+                ('spherical', 'Spherical', 'This spherical camera produces a longitude/lattitude environment map.'),            
+                ('fisheye', 'Fisheye', 'A classic lens.'),                 
+            ],
+            'expand' : True,
+            'save_in_preset': True
+        },             
+        {
+            'type': 'prop_search',
+            'attr': 'dofObject',
+            'name': 'Focus',
+            'description': 'Position of this object with respect to camera defines the focus of this camera (must be an EMPTY)', 
+            'src': lambda s,c: s.scene,
+            'src_attr': 'objects',
+            'trg': lambda s,c: c,
+            'trg_attr': 'dof_object',
+            'save_in_preset': True
+        },
+                  ]

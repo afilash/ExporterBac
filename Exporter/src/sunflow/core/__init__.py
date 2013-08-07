@@ -60,7 +60,7 @@ from ..properties import (camera , render , integrator)
 
 
 
-from ..ui import (render)
+from ..ui import (camera , render)
 
 #from ..ui import (
 #    render, render_layer, lamps, materials, mesh, 
@@ -112,14 +112,19 @@ _register_elm(bl_ui.properties_texture.TEXTURE_PT_preview)
 
 _register_elm(bl_ui.properties_data_lamp.DATA_PT_context_lamp)
     
-    
-    
-    
-    
+_register_elm(bl_ui.properties_data_camera.DATA_PT_context_camera)
+_register_elm(bl_ui.properties_data_camera.DATA_PT_lens)
+_register_elm(bl_ui.properties_data_camera.DATA_PT_camera)
+_register_elm(bl_ui.properties_data_camera.DATA_PT_camera_display)
+_register_elm(bl_ui.properties_data_camera.DATA_PT_custom_props_camera)
+
+
+
+
 
 # DEFAULT PANELS
 compatible("properties_data_mesh")
-compatible("properties_data_camera")
+#compatible("properties_data_camera")
 compatible("properties_particle")
 compatible("properties_data_speaker")    
     
