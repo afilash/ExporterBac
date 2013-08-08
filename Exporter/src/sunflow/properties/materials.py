@@ -28,7 +28,7 @@ import bpy, bl_ui
 
 from .. import SunflowAddon
 
-from .viewObjectColor import change_diffuse_color
+from .viewObjectColor import change_color
 
 from extensions_framework import declarative_property_group
 from extensions_framework.validate import Logic_Operator, Logic_OR as LOR
@@ -46,46 +46,47 @@ class sunflow_material(declarative_property_group):
             # TYPE
             'type',
             # CONST
-            'constantColor',
-            'constantEmit',
-            # DIFF
             'diffuseColor',
+            'constantEmit',
+            'uberDiffBlend',
+            # DIFF
+            #--------------------------------------------------- 'diffuseColor',
             # PHON
-            'phongColor',
-            'phongSpecular',
+            #--------------------------------------------------- 'diffuseColor',
+            'specularColor',
             ['phongSamples',
             'phongSpecHardness'],
             # SHIN
-            'shinyDiffuse',
+            #--------------------------------------------------- 'diffuseColor',
             'shinyReflection',
             'shinyExponent',
             # GLAS
             'glassETA',
-            'glassColor',
+            #--------------------------------------------------- 'diffuseColor',
             'glassAbsDistance',
             'glassAbsColor',
             # MIRR
             'mirrorReflection',
             # WARD
-            'wardDiffuse',
-            'wardSpecular',
+            #--------------------------------------------------- 'diffuseColor',
+            #-------------------------------------------------- 'specularColor',
             'wardRoughX',
             'wardRoughY',
             'wardSamples',
             # AO
             'ambientBright',
             'ambientDark',
-            'ambientSamples',
-            'ambientDistance',
+            ['ambientSamples',
+            'ambientDistance'],
             #UBER
-            'uberDiffuse',
-            'uberDiffBlend',
-            'uberSpecular',
+            #--------------------------------------------------- 'diffuseColor',
+            
+            #-------------------------------------------------- 'specularColor',
             'uberSpecBlend',
             'uberGlossy',
             'uberSamples',
             # LIGHT
-            'lightEmit',
+            #--------------------------------------------------- 'diffuseColor',
             'lightRadiance',
             'lightSamples',
             # JANI
@@ -93,30 +94,26 @@ class sunflow_material(declarative_property_group):
     ]
     
     visibility = {
-        # CONST       
-        'constantColor'     :{ 'type':'constant' },
+           
+        'diffuseColor'      :{ 'type': LOR(['constant' , 'diffuse' , 'phong' , 'shiny' ,'glass', 'ward' , 'uber' , 'light']) },
+        'specularColor'     :{ 'type': LOR(['phong' , 'ward' , 'uber' ]) },
+        # CONST    
         'constantEmit'      :{ 'type':'constant' },
         # DIFF
-        'diffuseColor'      :{ 'type':'diffuse' },
         # PHON
-        'phongColor'        :{ 'type':'phong' },
-        'phongSpecular'     :{ 'type':'phong' },
+        
         'phongSamples'      :{ 'type':'phong' },
         'phongSpecHardness' :{ 'type':'phong' },
         # SHIN
-        'shinyDiffuse'      :{ 'type':'shiny' },
         'shinyReflection'   :{ 'type':'shiny' },
         'shinyExponent'     :{ 'type':'shiny' },
         # GLAS
         'glassETA'          :{ 'type':'glass' },
-        'glassColor'        :{ 'type':'glass' },
         'glassAbsDistance'  :{ 'type':'glass' },
         'glassAbsColor'     :{ 'type':'glass' },
         # MIRR
         'mirrorReflection'  :{ 'type':'mirror' },
         # WARD
-        'wardDiffuse'       :{ 'type':'ward' },
-        'wardSpecular'      :{ 'type':'ward' },
         'wardRoughX'        :{ 'type':'ward' },
         'wardRoughY'        :{ 'type':'ward' },
         'wardSamples'       :{ 'type':'ward' },
@@ -126,14 +123,11 @@ class sunflow_material(declarative_property_group):
         'ambientSamples'    :{ 'type':'ambientocclusion' },
         'ambientDistance'   :{ 'type':'ambientocclusion' },
         # UBER
-        'uberDiffuse'       :{ 'type':'uber' },
         'uberDiffBlend'     :{ 'type':'uber' },
-        'uberSpecular'      :{ 'type':'uber' },
         'uberSpecBlend'     :{ 'type':'uber' },
         'uberGlossy'        :{ 'type':'uber' },
         'uberSamples'       :{ 'type':'uber' },
         # LIGHT
-        'lightEmit'         :{ 'type':'light' },
         'lightRadiance'     :{ 'type':'light' },
         'lightSamples'      :{ 'type':'light' },
         # JANI
@@ -147,34 +141,22 @@ class sunflow_material(declarative_property_group):
             'name': 'Material Type',
             'description': 'Specifes the type of sunflow material',
             'items': [
-                ('constant','constant','Constant (surface variation wont be considered).'),
-                ('diffuse','Diffuse','Diffuse (Plain diffuse shader).'),
+                ('constant','constant','surface variation wont be considered.'),
+                ('diffuse','Diffuse','Plain diffuse shader.'),
                 ('phong','Phong','Phong'),
                 ('shiny','Shiny','Shiny'),
                 ('glass','Glass','Glass'),
                 ('mirror','Mirror','Mirror'),
                 ('ward','Ward','Ward'),
                 ('ambientocclusion','Ambient Occlusion','Ambient Occlusion'),
-                ('uber','Uber','Uber (Diffuse ,Specular mix shader)'),
-                ('janino','Janino','Janino (Java compile time shader)'),
-                ('light','Light','Light (if applied to an object , that object will be converted as a mesh light).'),
+                ('uber','Uber','Diffuse ,Specular mix shader'),
+                ('janino','Janino','Java compile time shader'),
+                ('light','Light','If applied to an object , that object will be considered as a mesh light.'),
                 ('none', 'Passthrough material', 'none (means this object will not be rendered).')
             ],
             'default': 'diffuse',
             'save_in_preset': True
-        },
-        {
-            'type'      : 'float_vector',
-            'subtype'   : 'COLOR',
-            'attr'      : 'constantColor',
-            'name'      : 'Color',
-            'description': 'Constant shader color.',
-            'default'   : (0.8,0.8,0.8),
-            'min'       : 0.0,
-            'max'       : 1.0,    
-            'update'    : change_diffuse_color,   
-            'save_in_preset': True
-        },   
+        },  
         {
             'type': 'float',
             'attr': 'constantEmit',
@@ -183,7 +165,7 @@ class sunflow_material(declarative_property_group):
             'min': 1.0,
             'max': 10.0,
             'default': 1.0,
-            'update'    : change_diffuse_color,   
+            'update'    : change_color,   
             'save_in_preset': True
         },  
                   
@@ -191,59 +173,24 @@ class sunflow_material(declarative_property_group):
             'type'      : 'float_vector',
             'subtype'   : 'COLOR',
             'attr'      : 'diffuseColor',
-            'name'      : 'Color',
-            'description': 'Diffuse color.',
-            'default'   : (0.8,0.8,0.8),
-            'min'       : 0.0,
-            'max'       : 1.0,    
-            'update'    : change_diffuse_color,
-            'save_in_preset': True
-        }, 
-        {
-            'type'      : 'float_vector',
-            'subtype'   : 'COLOR',
-            'attr'      : 'phongColor',
             'name'      : 'Diffuse',
             'description': 'Diffuse color.',
             'default'   : (0.8,0.8,0.8),
             'min'       : 0.0,
-            'max'       : 1.0,         
-            'update'    : change_diffuse_color,
+            'max'       : 1.0,    
+            'update'    : change_color,
             'save_in_preset': True
         }, 
         {
             'type'      : 'float_vector',
             'subtype'   : 'COLOR',
-            'attr'      : 'phongSpecular',
+            'attr'      : 'specularColor',
             'name'      : 'Specular',
-            'description': 'Specular color.',
+            'description': 'Specular color value.',
             'default'   : (0.8,0.8,0.8),
             'min'       : 0.0,
             'max'       : 1.0,  
-            'update'    : change_diffuse_color,
-            'save_in_preset': True
-        }, 
-        {
-            'type'      : 'float_vector',
-            'subtype'   : 'COLOR',
-            'attr'      : 'shinyDiffuse',
-            'name'      : 'Color',
-            'description': 'Diffuse color.',
-            'default'   : (0.8,0.8,0.8),
-            'min'       : 0.0,
-            'max'       : 1.0,        
-            'update'    : change_diffuse_color,
-            'save_in_preset': True
-        }, 
-        {
-            'type'      : 'float_vector',
-            'subtype'   : 'COLOR',
-            'attr'      : 'glassColor',
-            'name'      : 'Color',
-            'description': 'Glass color.',
-            #'default'   : (0.8,0.8,0.8),
-            'min'       : 0.0,
-            'max'       : 1.0,          
+            'update'    : change_color,
             'save_in_preset': True
         }, 
         {
@@ -251,7 +198,7 @@ class sunflow_material(declarative_property_group):
             'subtype'   : 'COLOR',
             'attr'      : 'glassAbsColor',
             'name'      : 'Absorption Color',
-            'description': 'Absorption color.',
+            'description': 'The color which is most attenuated inside the glass.',
             'default'   : (0.8,0.8,0.8),
             'min'       : 0.0,
             'max'       : 1.0,         
@@ -264,28 +211,6 @@ class sunflow_material(declarative_property_group):
             'attr'      : 'mirrorReflection',
             'name'      : 'Reflection Strength',
             'description': 'Reflection strength.',
-            'default'   : (0.8,0.8,0.8),
-            'min'       : 0.0,
-            'max'       : 1.0,         
-            'save_in_preset': True
-        }, 
-        {
-            'type'      : 'float_vector',
-            'subtype'   : 'COLOR',
-            'attr'      : 'wardDiffuse',
-            'name'      : 'Diffuse',
-            'description': 'Diffuse color.',
-            'default'   : (0.8,0.8,0.8),
-            'min'       : 0.0,
-            'max'       : 1.0,        
-            'save_in_preset': True
-        }, 
-        {
-            'type'      : 'float_vector',
-            'subtype'   : 'COLOR',
-            'attr'      : 'wardSpecular',
-            'name'      : 'Specular',
-            'description': 'Specular color.',
             'default'   : (0.8,0.8,0.8),
             'min'       : 0.0,
             'max'       : 1.0,         
@@ -308,33 +233,11 @@ class sunflow_material(declarative_property_group):
             'attr'      : 'ambientDark',
             'name'      : 'Ambient Dark',
             'description': 'Ambient Dark color.',
-            'default'   : (0.8,0.8,0.8),
+            'default'   : (0.1,0.1,0.1),
             'min'       : 0.0,
             'max'       : 1.0,        
             'save_in_preset': True
         },   
-        {
-            'type'      : 'float_vector',
-            'subtype'   : 'COLOR',
-            'attr'      : 'uberDiffuse',
-            'name'      : 'Diffuse',
-            'description': 'Uber diffuse color.',
-            'default'   : (0.8,0.8,0.8),
-            'min'       : 0.0,
-            'max'       : 1.0,          
-            'save_in_preset': True
-        },   
-        {
-            'type'      : 'float_vector',
-            'subtype'   : 'COLOR',
-            'attr'      : 'uberSpecular',
-            'name'      : 'Specular',
-            'description': 'Specular color.',
-            'default'   : (0.8,0.8,0.8),
-            'min'       : 0.0,
-            'max'       : 1.0,          
-            'save_in_preset': True
-        }, 
         {
             'type': 'int',
             'attr': 'phongSamples',
@@ -353,7 +256,7 @@ class sunflow_material(declarative_property_group):
             'min': 0,
             'max': 50000,
             'default': 50,
-            'update'    : change_diffuse_color,
+            'update'    : change_color,
             'save_in_preset': True
         },   
         {
@@ -391,9 +294,9 @@ class sunflow_material(declarative_property_group):
             'type': 'float',
             'attr': 'glassAbsDistance',
             'name': 'Absorption Distance',
-            'description': 'Glass Absorption Distance (default 1.0).',
+            'description': 'Distance up to which light travels in a medium without attenuation (default 1.0).',
             'min': 0.0,
-            'max': 1000.0,
+            'max': 100.0,
             'default': 1.0,
             'save_in_preset': True
         },
@@ -488,17 +391,6 @@ class sunflow_material(declarative_property_group):
             'default' : 4 ,
             'save_in_preset': True
         },    
-        {
-            'type'      : 'float_vector',
-            'subtype'   : 'COLOR',
-            'attr'      : 'lightEmit',
-            'name'      : 'Emit',
-            'description': 'Mesh light color.',
-            'default'   : (0.8,0.8,0.8),
-            'min'       : 0.0,
-            'max'       : 1.0,         
-            'save_in_preset': True
-        }, 
         {
             'type': 'float',
             'attr': 'lightRadiance',

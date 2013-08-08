@@ -25,27 +25,31 @@
 # --------------------------------------------------------------------------
 
 
-def change_diffuse_color(self , context):
+def change_color(self , context):
     if context.object.active_material is not None:
-        if self.type == 'diffuse':
+        if self.type in ['diffuse', 'light' ]:
             context.object.active_material.diffuse_color = self.diffuseColor.copy()
             context.object.active_material.specular_color = (0.0, 0.0, 0.0)
         elif self.type == 'constant':            
-            context.object.active_material.diffuse_color = self.constantColor.copy()
+            context.object.active_material.diffuse_color = self.diffuseColor.copy()
             context.object.active_material.specular_color = (0.0, 0.0, 0.0)
             context.object.active_material.emit = self.constantEmit
         elif self.type == 'phong':                   
-            context.object.active_material.diffuse_color = self.phongColor.copy()
-            context.object.active_material.specular_color = self.phongSpecular.copy()
+            context.object.active_material.diffuse_color = self.diffuseColor.copy()
+            context.object.active_material.specular_color = self.specularColor.copy()
             context.object.active_material.specular_hardness = self.phongSpecHardness
         elif self.type == 'shiny':                   
-            context.object.active_material.diffuse_color = self.shinyDiffuse.copy()
+            context.object.active_material.diffuse_color = self.diffuseColor.copy()
             context.object.active_material.specular_color = (0.0, 0.0, 0.0)
+        elif self.type == 'glass':   
+            context.object.active_material.diffuse_color = self.diffuseColor.copy()
+        elif self.type in [ 'ward' , 'uber']:
+            context.object.active_material.diffuse_color = self.diffuseColor.copy()
+            context.object.active_material.specular_color = self.specularColor.copy()
+            context.object.active_material.specular_hardness = 50
+        elif self.type == 'none':   
+            context.object.active_material.diffuse_color = (0.0 ,0.0, 0.0)
         else:
             pass
         
             
-
-
-if __name__ == '__main__':
-    pass
