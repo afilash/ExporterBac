@@ -48,7 +48,7 @@ from ..export import (get_instance_materials, resolution, sunflowLaunch)
 #
 
 
-from ..properties import (camera , render , integrator , lamp)
+from ..properties import (camera , render , integrator , lamp , materials)
 
 #from ..properties import (
 #    engine, sampler, , lamp, texture,
@@ -60,7 +60,7 @@ from ..properties import (camera , render , integrator , lamp)
 
 
 
-from ..ui import (camera , render , lamps)
+from ..ui import (camera , render , lamps , materials )
 
 #from ..ui import (
 #    render, render_layer, lamps, materials, mesh, 
@@ -107,6 +107,8 @@ _register_elm(bl_ui.properties_scene.SCENE_PT_custom_props)
 
 _register_elm(bl_ui.properties_world.WORLD_PT_context_world, required=True)
 
+
+_register_elm(bl_ui.properties_material.MATERIAL_PT_context_material)
 _register_elm(bl_ui.properties_material.MATERIAL_PT_preview)
 _register_elm(bl_ui.properties_texture.TEXTURE_PT_preview)
 
@@ -138,7 +140,27 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
   
   
     def render(self, scene):
+        if scene.name == 'preview':
+            print("Preview Render")
+            return
         print("Press RENDER")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
