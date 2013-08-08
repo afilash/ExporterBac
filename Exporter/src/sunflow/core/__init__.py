@@ -139,17 +139,31 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
     bl_use_preview      = True
   
   
+
+    render_lock = threading.Lock()
+    
+
+    def render_preview(self, scene):
+        print("Render Preview Initiated")
+    
+    
     def render(self, scene):
-        if scene.name == 'preview':
-            print("Preview Render")
+        if self is None or scene is None:
+            print('ERROR: Scene is missing!')
             return
-        print("Press RENDER")
+#        if scene.mitsuba_engine.binary_path == '':
+#            MtsLog('ERROR: The binary path is unspecified!')
+#            return
+        
+        with self.render_lock:    # just render one thing at a time
+            if scene.name == 'preview':
+                self.render_preview(scene)
+                return
+            print("Main Render")
+            
 
 
-
-
-
-
+    
 
 
 

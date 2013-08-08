@@ -57,12 +57,14 @@ class MATERIAL_PT_material(sunflow_material_base, bpy.types.Panel):
     ]
     
 
-    
-    def draw(self, context):
-        layout = self.layout
-        mat = context.material.sunflow_material
-        #layout.active = (mat.use_bsdf)
-        layout.prop(context.material.sunflow_material, "type", text="")
+#    
+#    def draw(self, context):
+#        layout = self.layout
+#        mat = context.material.sunflow_material
+#        #layout.active = (mat.use_bsdf)
+#        layout.prop(context.material.sunflow_material, "type", text="")
+        
+        
 #        if mat.type != 'none':
 #            bsdf = getattr(mat, 'mitsuba_bsdf_%s' % mat.type)
 #            for p in bsdf.controls:
@@ -70,6 +72,5 @@ class MATERIAL_PT_material(sunflow_material_base, bpy.types.Panel):
 #                    property_group=bsdf)
 #            bsdf.draw_callback(context)
         
+        
 
-if __name__ == '__main__':
-    pass
