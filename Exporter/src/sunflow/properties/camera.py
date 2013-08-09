@@ -103,13 +103,7 @@ class sunflow_camera(declarative_property_group):
                 
     controls = [     
                 'sunflowCameraText',
-                'cameraType',    
-                #DOF       
-                'dofEnabledScene',
-                'dofObject',
-                'aperture',
-                ['apertureBlades',
-                'bladeRotation'],
+                'cameraType',
                 #CMBLUR
                 'cameraMBlur',
                 'cameraMBlurSteps',
@@ -117,6 +111,13 @@ class sunflow_camera(declarative_property_group):
                 'objectMBlur',
                 'objectMBlurGroup',
                 'shutterTime',
+                #DOF       
+                'dofEnabledScene',
+                'dofObject',
+                'aperture',
+                ['apertureBlades',
+                'bladeRotation'],
+                
                 ]
     visibility = {
                    #DOF    
@@ -126,8 +127,8 @@ class sunflow_camera(declarative_property_group):
                   'apertureBlades'          : { 'cameraType':'thinlens' , 'dofEnabledScene': True },
                   'bladeRotation'           : { 'cameraType':'thinlens' , 'dofEnabledScene': True },
                   #CMBLUR
-                  'cameraMBlur'             : { 'cameraType':'thinlens' },
-                  'cameraMBlurSteps'        : { 'cameraType':'thinlens' , 'cameraMBlur': True },
+                  #'cameraMBlur'             : { 'cameraType':'thinlens' },
+                  'cameraMBlurSteps'        : { 'cameraMBlur': True },
                   #OMBLUR
                   'objectMBlurGroup'        : { 'objectMBlur':True },
                   'shutterTime'             : { 'objectMBlur':True },
