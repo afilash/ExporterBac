@@ -70,8 +70,8 @@ class sunflow_material(declarative_property_group):
             # WARD
             #--------------------------------------------------- 'diffuseColor',
             #-------------------------------------------------- 'specularColor',
-            'wardRoughX',
-            'wardRoughY',
+            ['wardRoughX',
+            'wardRoughY'],
             'wardSamples',
             # AO
             'ambientBright',

@@ -69,15 +69,7 @@ class SunflowRender_PT_tracing(SunflowRenderPanel):
     display_property_groups = [
         ( ('scene',), 'sunflow_tracing' )
     ]
-            
-@SunflowAddon.addon_register_class
-class SunflowRender_PT_configure(SunflowRenderPanel):
-    bl_label = "Configure"
-    bl_options = {'DEFAULT_CLOSED'}
-    
-    display_property_groups = [
-        ( ('scene',), 'sunflow_renderconfigure' )
-    ]
+ 
 
 @SunflowAddon.addon_register_class
 class SunflowRender_PT_output(SunflowRenderPanel):

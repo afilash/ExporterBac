@@ -31,22 +31,26 @@ from .. import SunflowAddon
 
 from extensions_framework.ui import property_group_renderer
 
-narrowui = 180
 
 class sunflow_rlayers(bl_ui.properties_render_layer.RenderLayerButtonsPanel, property_group_renderer):
     COMPAT_ENGINES = { 'SUNFLOW_RENDER' }
 
+           
 @SunflowAddon.addon_register_class
-class sunflow_rlayers_panel(sunflow_rlayers):
-    bl_label = 'Sunflow Rlayes'
+class SunflowRender_PT_configure(sunflow_rlayers):
+    bl_label = "Configure"
+    bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
-        ( ('scene',), 'sunflow_renderlayercfg' )
-    ]
-    
-    # Overridden to draw some of blender's lamp controls
-    def draw(self, context):
-        layout = self.layout
-        row = layout.row()
-        row.prop( context.scene.sunflow_renderlayercfg ,"examPath")
+        ( ('scene',), 'sunflow_renderconfigure' )
+    ]        
             
+                       
+@SunflowAddon.addon_register_class
+class SunflowRender_PT_quickpasses(sunflow_rlayers):
+    bl_label = "Quick Passes"
+    #bl_options = {'DEFAULT_CLOSED'}
+    
+    display_property_groups = [
+        ( ('scene',), 'sunflow_passes' )
+    ]    

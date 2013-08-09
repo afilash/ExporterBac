@@ -31,15 +31,18 @@ from extensions_framework import declarative_property_group
 from extensions_framework import util as efutil
 
 
+
 @SunflowAddon.addon_register_class
-class sunflow_renderlayercfg(declarative_property_group):
+class sunflow_renderconfigure(declarative_property_group):
     """ 
             
     """
 
     ef_attach_to = ['Scene']
     controls = [
-                'examPath',
+                'sunflowPath',
+                'javaPath',
+                'memoryAllocated',
                 ]
     visibility = {}
     enabled = {}
@@ -50,12 +53,90 @@ class sunflow_renderlayercfg(declarative_property_group):
     properties = [
         {
             'type'      : 'string',
-            'attr'      : 'examPath',            
+            'attr'      : 'sunflowPath',            
             'subtype'   : 'FILE_PATH',
             'name'      : 'Sunflow Path',
             'description': 'Path to sunflow rendering system jar file (just directory value dont include *.jar at end).',
-            'default'   : "",
+            'default'   : efutil.find_config_value('sunflow', 'defaults', 'jar_path', ''),
             'save_in_preset': True
         },
+        {
+            'type'      : 'string',
+            'attr'      : 'javaPath',            
+            'subtype'   : 'FILE_PATH',
+            'name'      : 'Java Server Path',
+            'description': 'Path to Java bin file of the server',
+            'default'   : efutil.find_config_value('sunflow', 'defaults', 'java_path', ''),
+            'save_in_preset': True
+        },   
+        {
+            'type': 'string',
+            'attr': 'memoryAllocated',
+            'name': 'Memory (MB)',
+            'description': 'Memory allocated for running jar executable in MB. ',            
+            'default': efutil.find_config_value('sunflow', 'defaults', 'memoryalloc', ''),
+            'save_in_preset': True
+        },  
                      
-                  ]
+                  ]    
+    
+    
+
+@SunflowAddon.addon_register_class
+class sunflow_passes(declarative_property_group):
+    """ 
+            
+    """
+
+    ef_attach_to = ['Scene']
+    controls = [
+                'quickmode',
+                'distOcclusion',
+                ]
+    visibility = {
+                  'distOcclusion' : {'quickmode': 'quickambocc'}
+                  }
+    enabled = {}
+    alert = {}
+    
+    
+    
+    properties = [
+        {
+            'type': 'enum',
+            'attr': 'quickmode',
+            'name': 'Quick Override Methods',
+            'description': 'Command line overrides.',
+            'default': 'quicknone',
+            'items': [
+                ('quicknone', 'None', 'Normal render mode.'),
+                ('quickuvs', 'UV', 'Renders the UVs of objects.'),
+                ('quicknormals', 'Normal', 'Renders the normals of objects. '), 
+                ('quickid', 'ID', 'Renders using a unique color for each instance. '), 
+                ('quickprims', 'Primitive', 'Renders using a unique color for each primitive. '), 
+                ('quickgray', 'Gray', 'Renders the all the objects in the scene gray diffuse, overriding all shaders'), 
+                ('quickwire', 'Wire', 'Renders objects as wireframe. aa and filter values taken into consideration.'), 
+                ('quickambocc', 'Occlusion', 'ambient occlusion mode with a certain distance'),                              
+            ],
+            'save_in_preset': True
+        },     
+        {
+            'type': 'float',
+            'attr': 'distOcclusion',
+            'name': 'Occlusion Distance',
+            'description': 'For quick AO (default 1.0).',
+            'min': 0.0,
+            'max': 300.0,
+            'default': 1.0,
+            'slider': True,
+            'save_in_preset': True
+        },
+                  ]    
+    
+    
+    
+    
+    
+    
+    
+    
