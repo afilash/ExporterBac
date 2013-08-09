@@ -320,6 +320,53 @@ class sunflow_tracing(declarative_property_group):
         ]
    
    
+@SunflowAddon.addon_register_class
+class sunflow_renderconfigure(declarative_property_group):
+    """ 
+            
+    """
+
+    ef_attach_to = ['Scene']
+    controls = [
+                'sunflowPath',
+                'javaPath',
+                'memoryAllocated',
+                ]
+    visibility = {}
+    enabled = {}
+    alert = {}
+    
+    
+    
+    properties = [
+        {
+            'type'      : 'string',
+            'attr'      : 'sunflowPath',            
+            'subtype'   : 'FILE_PATH',
+            'name'      : 'Sunflow Path',
+            'description': 'Path to sunflow rendering system jar file (just directory value dont include *.jar at end).',
+            'default'   : efutil.find_config_value('sunflow', 'defaults', 'jar_path', ''),
+            'save_in_preset': True
+        },
+        {
+            'type'      : 'string',
+            'attr'      : 'javaPath',            
+            'subtype'   : 'FILE_PATH',
+            'name'      : 'Java Server Path',
+            'description': 'Path to Java bin file of the server',
+            'default'   : efutil.find_config_value('sunflow', 'defaults', 'java_path', ''),
+            'save_in_preset': True
+        },   
+        {
+            'type': 'string',
+            'attr': 'memoryAllocated',
+            'name': 'Memory (MB)',
+            'description': 'Memory allocated for running jar executable in MB. ',            
+            'default': efutil.find_config_value('sunflow', 'defaults', 'memoryalloc', ''),
+            'save_in_preset': True
+        },  
+                     
+                  ]
    
 #        {
 #            'attr': 'dummy_variable',

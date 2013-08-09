@@ -48,7 +48,7 @@ from ..export import (get_instance_materials, resolution, sunflowLaunch)
 #
 
 
-from ..properties import (camera , render , integrator , lamp , materials)
+from ..properties import (camera , render , integrator , lamp , materials )
 
 #from ..properties import (
 #    engine, sampler, , lamp, texture,
@@ -60,7 +60,7 @@ from ..properties import (camera , render , integrator , lamp , materials)
 
 
 
-from ..ui import (camera , render , lamps , materials )
+from ..ui import (camera , render , lamps , materials  )
 
 #from ..ui import (
 #    render, render_layer, lamps, materials, mesh, 
@@ -106,6 +106,8 @@ _register_elm(bl_ui.properties_scene.SCENE_PT_rigid_body_world)
 _register_elm(bl_ui.properties_scene.SCENE_PT_custom_props)
 
 _register_elm(bl_ui.properties_world.WORLD_PT_context_world, required=True)
+_register_elm(bl_ui.properties_world.WORLD_PT_preview, required=True)
+_register_elm(bl_ui.properties_world.WORLD_PT_world, required=True)
 
 
 _register_elm(bl_ui.properties_material.MATERIAL_PT_context_material)
@@ -126,9 +128,10 @@ _register_elm(bl_ui.properties_data_camera.DATA_PT_custom_props_camera)
 
 # DEFAULT PANELS
 compatible("properties_data_mesh")
+compatible("properties_texture")
 #compatible("properties_data_camera")
 compatible("properties_particle")
-compatible("properties_data_speaker")    
+compatible("properties_data_speaker")
     
     
 
@@ -161,20 +164,35 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
                 return
             print("Main Render")
             
+            
+            config_updates = {}
+            
+            jar_path = os.path.abspath(efutil.filesystem_path(scene.sunflow_renderconfigure.sunflowPath))
+            if os.path.isdir(jar_path) and os.path.exists(jar_path):
+                config_updates['jar_path'] = jar_path
+            else:
+                print("Unable to find path jar_path")
+            
+            java_path = os.path.abspath(efutil.filesystem_path(scene.sunflow_renderconfigure.javaPath))
+            if os.path.isdir(java_path) and os.path.exists(java_path):
+                config_updates['java_path'] = java_path
+            else:
+                print("Unable to find path java_path")
+                
+            
+            memoryalloc = scene.sunflow_renderconfigure.memoryAllocated
+            config_updates['memoryalloc'] = memoryalloc
 
+                
+            try:
+                for k, v in config_updates.items():
+                    efutil.write_config_value('sunflow', 'defaults', k, v)
+                    print("writing values")
+            except Exception as err:
+                print('WARNING: Saving sunflow configuration failed, please set your user scripts dir: %s' % err)
+            
 
     
-
-
-
-
-
-
-
-
-
-
-
 
 
 
