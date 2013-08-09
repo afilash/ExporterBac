@@ -48,7 +48,7 @@ from ..export import (get_instance_materials, resolution, sunflowLaunch)
 #
 
 
-from ..properties import (camera , render , integrator , lamp , materials )
+from ..properties import (camera , render , integrator , lamp , materials , renderlayers)
 
 #from ..properties import (
 #    engine, sampler, , lamp, texture,
@@ -60,7 +60,7 @@ from ..properties import (camera , render , integrator , lamp , materials )
 
 
 
-from ..ui import (camera , render , lamps , materials  )
+from ..ui import (camera , render , lamps , materials , renderlayers )
 
 #from ..ui import (
 #    render, render_layer, lamps, materials, mesh, 
