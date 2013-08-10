@@ -29,6 +29,7 @@ from .. import SunflowAddon
 
 from extensions_framework import declarative_property_group
 from extensions_framework import util as efutil
+from extensions_framework.validate import Logic_OR as LOR, Logic_AND as LAND
 
 
 @SunflowAddon.addon_register_class
@@ -127,7 +128,7 @@ class sunflow_camera(declarative_property_group):
                   'apertureBlades'          : { 'cameraType':'thinlens' , 'dofEnabledScene': True },
                   'bladeRotation'           : { 'cameraType':'thinlens' , 'dofEnabledScene': True },
                   #CMBLUR
-                  #'cameraMBlur'             : { 'cameraType':'thinlens' },
+                  'cameraMBlur'             : { 'cameraType': LOR(['thinlens','pinhole']) },
                   'cameraMBlurSteps'        : { 'cameraMBlur': True },
                   #OMBLUR
                   'objectMBlurGroup'        : { 'objectMBlur':True },
@@ -197,7 +198,7 @@ class sunflow_camera(declarative_property_group):
             'type': 'int',
             'attr': 'cameraMBlurSteps',
             'name': 'Blur Steps',
-            'description': 'The number of motion blur steps per frame (default 2). ',            
+            'description': 'The number of frames to interpolate to get the motion blur effect (default 2). ',            
             'min': 0,
             'max':   100,
             'default': 2,
