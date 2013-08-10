@@ -151,8 +151,7 @@ class sunflow_material(declarative_property_group):
                 ('ambientocclusion','Ambient Occlusion','Ambient Occlusion'),
                 ('uber','Uber','Diffuse ,Specular mix shader'),
                 ('janino','Janino','Java compile time shader'),
-                ('light','Light','If applied to an object , that object will be considered as a mesh light.'),
-                ('none', 'Passthrough material', 'none (means this object will not be rendered).')
+                ('light','Light','If applied to an object , that object will be considered as a mesh light.')
             ],
             'default': 'diffuse',
             'save_in_preset': True
