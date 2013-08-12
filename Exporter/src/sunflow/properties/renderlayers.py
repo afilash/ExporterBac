@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
-# ***** END GPL LICENCE BLOCK *****
+# ***** END GPL LICENCE BLOCK ***** 
 #
 # --------------------------------------------------------------------------
 # Blender Version                     2.68
@@ -53,7 +53,7 @@ class sunflow_renderconfigure(declarative_property_group):
     properties = [
         {
             'type'      : 'string',
-            'attr'      : 'sunflowPath',            
+            'attr'      : 'sunflowPath',
             'subtype'   : 'FILE_PATH',
             'name'      : 'Sunflow Path',
             'description': 'Path to sunflow rendering system jar file (just directory value dont include *.jar at end).',
@@ -62,21 +62,21 @@ class sunflow_renderconfigure(declarative_property_group):
         },
         {
             'type'      : 'string',
-            'attr'      : 'javaPath',            
+            'attr'      : 'javaPath',
             'subtype'   : 'FILE_PATH',
             'name'      : 'Java Server Path',
             'description': 'Path to Java bin file of the server',
             'default'   : efutil.find_config_value('sunflow', 'defaults', 'java_path', ''),
             'save_in_preset': True
-        },   
+        },
         {
             'type': 'string',
             'attr': 'memoryAllocated',
             'name': 'Memory (MB)',
-            'description': 'Memory allocated for running jar executable in MB. ',            
+            'description': 'Memory allocated for running jar executable in MB. ',
             'default': efutil.find_config_value('sunflow', 'defaults', 'memoryalloc', ''),
             'save_in_preset': True
-        },  
+        },
                      
                   ]    
     
@@ -111,15 +111,15 @@ class sunflow_passes(declarative_property_group):
             'items': [
                 ('quicknone', 'None', 'Normal render mode.'),
                 ('quickuvs', 'UV', 'Renders the UVs of objects.'),
-                ('quicknormals', 'Normal', 'Renders the normals of objects. '), 
-                ('quickid', 'ID', 'Renders using a unique color for each instance. '), 
-                ('quickprims', 'Primitive', 'Renders using a unique color for each primitive. '), 
-                ('quickgray', 'Gray', 'Renders the all the objects in the scene gray diffuse, overriding all shaders'), 
-                ('quickwire', 'Wire', 'Renders objects as wireframe. aa and filter values taken into consideration.'), 
-                ('quickambocc', 'Occlusion', 'ambient occlusion mode with a certain distance'),                              
+                ('quicknormals', 'Normal', 'Renders the normals of objects. '),
+                ('quickid', 'ID', 'Renders using a unique color for each instance. '),
+                ('quickprims', 'Primitive', 'Renders using a unique color for each primitive. '),
+                ('quickgray', 'Gray', 'Renders the all the objects in the scene gray diffuse, overriding all shaders'),
+                ('quickwire', 'Wire', 'Renders objects as wireframe. aa and filter values taken into consideration.'),
+                ('quickambocc', 'Occlusion', 'ambient occlusion mode with a certain distance'),
             ],
             'save_in_preset': True
-        },     
+        },
         {
             'type': 'float',
             'attr': 'distOcclusion',

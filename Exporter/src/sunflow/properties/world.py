@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
-# ***** END GPL LICENCE BLOCK *****
+# ***** END GPL LICENCE BLOCK ***** 
 #
 # --------------------------------------------------------------------------
 # Blender Version                     2.68
@@ -44,7 +44,7 @@ class sunflow_world(declarative_property_group):
     
     controls = [
                 'worldLighting',
-                'worldTexture',                
+                'worldTexture',
                 ['iblLock',
                 'iblSamples'],
                 'worldCenter',
@@ -81,11 +81,11 @@ class sunflow_world(declarative_property_group):
             'description': 'Gives the world lighting settings these light will give the overall illumination os the scene(remember these lights wont emit photons).',
             'default': 'papersky',
             'items': [
-                ('papersky', 'Paper Sky', 'See the above World Horizon Color settings.'), 
+                ('papersky', 'Paper Sky', 'See the above World Horizon Color settings.'),
                 ('sunsky', 'Sun Sky', 'See the SUN light settings in the light properties panel.'),
-                ('ibl', 'Image Based Lighting', 'Insert a world texture with HDR image in the texture panel.'),                             
+                ('ibl', 'Image Based Lighting', 'Insert a world texture with HDR image in the texture panel.'),
             ],
-            #'expand' : True,
+            # 'expand' : True,
             'save_in_preset': True
         },
         {
@@ -97,12 +97,12 @@ class sunflow_world(declarative_property_group):
             'default' : (0.0, 0.0, 1.0),
             'precision': 3,
             'save_in_preset': True
-        },                  
+        },
         {
             'type': 'text',
             'attr': 'worldUPtext',
             'name': 'UP Direction:',
-        },  
+        },
         {
             'type': 'enum',
             'attr': 'worldUP',
@@ -110,9 +110,9 @@ class sunflow_world(declarative_property_group):
             'description': 'Gives the world upside direction.',
             'default': 'z',
             'items': [
-                ('x', 'X', 'x.'), 
+                ('x', 'X', 'x.'),
                 ('y', 'Y', 'y.'),
-                ('z', 'Z', 'z.'),                             
+                ('z', 'Z', 'z.'),
             ],
             'update' : set_worldUp,
             'expand' : True,
@@ -120,7 +120,7 @@ class sunflow_world(declarative_property_group):
         },
         {
             'type': 'string',
-            'attr': 'worldUPString' ,            
+            'attr': 'worldUPString' ,
             'name': 'worldUPString' ,
             'default': '0  0  1',
             'save_in_preset': True
@@ -130,14 +130,14 @@ class sunflow_world(declarative_property_group):
             'attr': 'iblLock',
             'name': 'Lock',
             'description': 'Importance sampling.',
-            'default': False,            
+            'default': False,
             'save_in_preset': True
         },
         {
             'type': 'int',
             'attr': 'iblSamples',
             'name': 'Samples',
-            'description': 'The number of samples to be taken (default 1000000). ',            
+            'description': 'The number of samples to be taken (default 1000000). ',
             'min': 0,
             'max':   2048,
             'default': 16,
@@ -145,7 +145,7 @@ class sunflow_world(declarative_property_group):
         },
         {
             'type': 'string',
-            'attr': 'texturename' ,            
+            'attr': 'texturename' ,
             'name': 'texturename' ,
             'description': 'Texture',
             'save_in_preset': True
@@ -153,9 +153,9 @@ class sunflow_world(declarative_property_group):
         {
             'type': 'prop_search',
             'attr': 'worldTexture' ,
-            'src': lambda s,c: c.world,
+            'src': lambda s, c: c.world,
             'src_attr': 'texture_slots',
-            'trg': lambda s,c: c.sunflow_world,
+            'trg': lambda s, c: c.sunflow_world,
             'trg_attr': 'texturename',
             'name': 'Texture'
         },

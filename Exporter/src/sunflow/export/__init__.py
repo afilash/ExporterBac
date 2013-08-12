@@ -23,7 +23,7 @@
 # Created on                          19-Jul-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
-
+ 
 import bpy, os, copy, subprocess, math, mathutils
 import string
 import collections
@@ -45,7 +45,7 @@ class ExportProgressThread(efutil.TimerThread):
     def kick(self):
         if self.exported_objects != self.last_update:
             self.last_update = self.exported_objects
-            pc = int(100 * self.exported_objects/self.total_objects)
+            pc = int(100 * self.exported_objects / self.total_objects)
             sfrsLog(self.message % pc)
 
 class ExportCache(object):
@@ -77,10 +77,10 @@ class ExportCache(object):
             raise Exception('Item %s not found in %s!' % (ck, self.name))
 
 class ParamSetItem(list):
-    type        = None
-    type_name    = None
-    name        = None
-    value        = None
+    type = None
+    type_name = None
+    name = None
+    value = None
     
     def __init__(self, *args):
         self.type, self.name, self.value = args
@@ -106,7 +106,7 @@ class ParamSetItem(list):
             else:
                 exporter.element('ref', {'id' : self.value})
         elif self.type == "reference_material":
-            exporter.element('ref', {'id' : self.value+'-material', 'name' : self.name})
+            exporter.element('ref', {'id' : self.value + '-material', 'name' : self.name})
 
 class ParamSet(list):
     names = []
@@ -168,7 +168,7 @@ class ParamSet(list):
 
 def is_obj_visible(scene, obj, is_dupli=False):
     ov = False
-    for lv in [ol and sl and rl for ol,sl,rl in zip(obj.layers, scene.layers, scene.render.layers.active.layers)]:
+    for lv in [ol and sl and rl for ol, sl, rl in zip(obj.layers, scene.layers, scene.render.layers.active.layers)]:
         ov |= lv
     return (ov or is_dupli) and not obj.hide_render
 
@@ -199,7 +199,7 @@ def sunflowLaunch(mts_path, path, commandline):
     env = copy.copy(os.environ)
     env['LD_LIBRARY_PATH'] = mts_path
     commandline[0] = os.path.join(mts_path, commandline[0])
-    return subprocess.Popen(commandline, env = env, cwd = path)        #, stdout=subprocess.PIPE)
+    return subprocess.Popen(commandline, env=env, cwd=path)  # , stdout=subprocess.PIPE)
 
 if __name__ == '__main__':
     pass

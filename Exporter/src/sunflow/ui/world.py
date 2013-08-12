@@ -24,7 +24,7 @@
 # Author                              NodeBench
 # --------------------------------------------------------------------------
 
-
+ 
 import bpy, bl_ui
 
 from extensions_framework.ui import property_group_renderer
@@ -43,5 +43,5 @@ class sunflow_worldsettings(world_panel):
     bl_label = 'World Lighting'
     
     display_property_groups = [
-        ( ('scene',), 'sunflow_world' )
+        (('scene',), 'sunflow_world')
     ]

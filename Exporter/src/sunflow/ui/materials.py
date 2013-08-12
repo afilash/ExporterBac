@@ -23,7 +23,7 @@
 # Created on                          08-Aug-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
-
+ 
 
 import bpy, bl_ui
 
@@ -34,7 +34,7 @@ from extensions_framework import util as efutil
 
 
 class sunflow_material_base(bl_ui.properties_material.MaterialButtonsPanel, property_group_renderer):
-    COMPAT_ENGINES    = { 'SUNFLOW_RENDER' }
+    COMPAT_ENGINES = { 'SUNFLOW_RENDER' }
     
     def draw(self, context):
         if not hasattr(context, 'material'):
@@ -49,11 +49,11 @@ class MATERIAL_PT_material(sunflow_material_base, bpy.types.Panel):
     Material UI Panel
     '''
     
-    bl_label    = 'Sunflow Material'
-    COMPAT_ENGINES    = { 'SUNFLOW_RENDER' }
+    bl_label = 'Sunflow Material'
+    COMPAT_ENGINES = { 'SUNFLOW_RENDER' }
     
     display_property_groups = [
-        ( ('material',), 'sunflow_material' )
+        (('material',), 'sunflow_material')
     ]
     
 

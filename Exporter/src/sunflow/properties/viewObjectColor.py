@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
-# ***** END GPL LICENCE BLOCK *****
+# ***** END GPL LICENCE BLOCK ***** 
 #
 # --------------------------------------------------------------------------
 # Blender Version                     2.68
@@ -48,7 +48,7 @@ def change_color(self , context):
             context.object.active_material.specular_color = self.specularColor.copy()
             context.object.active_material.specular_hardness = 50
         elif self.type == 'none':   
-            context.object.active_material.diffuse_color = (0.0 ,0.0, 0.0)
+            context.object.active_material.diffuse_color = (0.0 , 0.0, 0.0)
         else:
             pass
         

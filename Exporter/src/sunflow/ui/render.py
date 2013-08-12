@@ -23,7 +23,7 @@
 # Created on                          04-Aug-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
-
+ 
 
 
 import bpy
@@ -44,10 +44,10 @@ class SunflowRenderPanel(RenderButtonsPanel, property_group_renderer):
 @SunflowAddon.addon_register_class
 class SunflowRender_PT_integrator(SunflowRenderPanel):
     bl_label = "Global Illumination"
-    #bl_options = {'DEFAULT_CLOSED'}
+    # bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
-        ( ('scene',), 'sunflow_integrator' )
+        (('scene',), 'sunflow_integrator')
     ]
     
 
@@ -57,7 +57,7 @@ class SunflowRender_PT_antialiasing(SunflowRenderPanel):
     bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
-        ( ('scene',), 'sunflow_antialiasing' )
+        (('scene',), 'sunflow_antialiasing')
     ]
             
 
@@ -67,7 +67,7 @@ class SunflowRender_PT_tracing(SunflowRenderPanel):
     bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
-        ( ('scene',), 'sunflow_tracing' )
+        (('scene',), 'sunflow_tracing')
     ]
  
 
@@ -77,7 +77,7 @@ class SunflowRender_PT_output(SunflowRenderPanel):
     bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
-        ( ('scene', 'camera', 'data'),'sunflow_film' )
+        (('scene', 'camera', 'data'), 'sunflow_film')
     ]
     
     def draw(self, context):
@@ -93,7 +93,7 @@ class SunflowRender_PT_output(SunflowRenderPanel):
         
         col = split.column()
         col.prop(rd, "use_file_extension")
-        #split.prop(rd, "use_file_extension")
+        # split.prop(rd, "use_file_extension")
         
         film = context.scene.camera.data.sunflow_film
         layout.prop(film, "fileFormat")
@@ -105,7 +105,7 @@ class SunflowRender_PT_performance(SunflowRenderPanel):
     bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
-        ( ('scene',), 'sunflow_performance' )
+        (('scene',), 'sunflow_performance')
     ]
     
     def draw(self, context):

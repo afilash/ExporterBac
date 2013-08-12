@@ -30,7 +30,7 @@ from .. import SunflowAddon
 from extensions_framework import declarative_property_group
 from extensions_framework import util as efutil
 
-#def getEmpties(s,c):
+# def getEmpties(s,c):
 #    return [object for object in s.scene.objects[:] if object.type == 'EMPTY']
 
 @SunflowAddon.addon_register_class
@@ -71,7 +71,7 @@ class sunflow_performance(declarative_property_group):
             'description': 'Set sunflow thread priority to high (default is low priority).',
             'default' : False,
             'save_in_preset': True
-        },  
+        },
         {
             'type': 'bool',
             'attr': 'enableVerbosity',
@@ -79,7 +79,7 @@ class sunflow_performance(declarative_property_group):
             'description': 'Set sunflow verbosity level to 4 (detailed) ( default is none). ',
             'default' : False,
             'save_in_preset': True
-        }, 
+        },
         {
             'type': 'int',
             'attr': 'bucketSize',
@@ -98,9 +98,9 @@ class sunflow_performance(declarative_property_group):
             'default': 'hilbert',
             'items': [
                 ('hilbert', 'Hilbert', 'hilbert'),
-                ('hilbertRev', 'Hilbert (Reverse)', 'hilbertRev'),
+                # ('hilbertRev', 'Hilbert (Reverse)', 'hilbertRev'),
                 ('spiral', 'Spiral', 'spiral'),
-                ('spiralRev', 'Spiral (Reverse)', 'spiralRev'),
+                # ('spiralRev', 'Spiral (Reverse)', 'spiralRev'),
                 ('column', 'Column', 'column'),
                 ('row', 'Row', 'row'),
                 ('diagonal', 'Diagonal', 'diagonal'),
@@ -120,8 +120,8 @@ class sunflow_antialiasing(declarative_property_group):
     ef_attach_to = ['Scene']   
     controls = [
                 ['adaptiveAAMin', 'adaptiveAAMax'],
-                ['jitterAA','samplesAA'],
-                'imageFilter',                
+                ['jitterAA', 'samplesAA'],
+                'imageFilter',
                 ]                   
     visibility = {}
     enabled = {}
@@ -132,8 +132,8 @@ class sunflow_antialiasing(declarative_property_group):
             'type': 'int',
             'attr': 'adaptiveAAMin',
             'name': 'Adaptive Min',
-            'description': 'value of 0 corresponds to 1 sample per pixel. A value of -1 corresponds to (1 per 2x2 pixel block) (default 0) ',            
-            'min': -10,
+            'description': 'value of 0 corresponds to 1 sample per pixel. A value of -1 corresponds to (1 per 2x2 pixel block) (default 0) ',
+            'min':-10,
             'max': 10,
             'default': 0,
             'save_in_preset': True
@@ -142,8 +142,8 @@ class sunflow_antialiasing(declarative_property_group):
             'type': 'int',
             'attr': 'adaptiveAAMax',
             'name': 'Adaptive Max',
-            'description': 'A value of 1 corresponds to 4 samples per pixel (2x2 subpixel grid) A value of 2 corresponds to 16 samples per pixel (4x4 subpixel grid)  (default 1) ',            
-            'min': -10,
+            'description': 'A value of 1 corresponds to 4 samples per pixel (2x2 subpixel grid) A value of 2 corresponds to 16 samples per pixel (4x4 subpixel grid)  (default 1) ',
+            'min':-10,
             'max': 10,
             'default': 1,
             'save_in_preset': True
@@ -152,17 +152,17 @@ class sunflow_antialiasing(declarative_property_group):
             'type': 'int',
             'attr': 'samplesAA',
             'name': 'Samples',
-            'description': 'number of samples. directly affects DoF and camera/object motion blur. (default 4) ',            
+            'description': 'number of samples. directly affects DoF and camera/object motion blur. (default 4) ',
             'min': 0,
             'max': 1024,
             'default': 4,
             'save_in_preset': True
-        },  
+        },
         {
             'type': 'enum',
             'attr': 'imageFilter',
             'name': 'Image Filter',
-            'description': 'This will smooth out over-sampled images (default is hilbert).',            
+            'description': 'This will smooth out over-sampled images (default is hilbert).',
             'items': [
                 ('box', 'Box', 'box (filter size = 1)'),
                 ('triangle', 'Triangle', 'triangle (filter size = 2)'),
@@ -197,14 +197,14 @@ class sunflow_tracing(declarative_property_group):
     ef_attach_to = ['Scene']   
 
     controls = [
-                [0.4,'diffuseBouncesText', 'diffuseBounces'],
-                [0.4,'reflectionDepthText', 'reflectionDepth'],
-                [0.4,'refractionDepthText', 'refractionDepth'],  
+                [0.4, 'diffuseBouncesText', 'diffuseBounces'],
+                [0.4, 'reflectionDepthText', 'reflectionDepth'],
+                [0.4, 'refractionDepthText', 'refractionDepth'],
                 'useCaustics',
-                [0.4,'causticPhotonsText', 'causticPhotons'],
-                [0.4,'estimationPhotonsText', 'estimationPhotons'],
-                [0.4,'estimationRadiusText', 'estimationRadius'],
-                #'Does_it_Work',
+                [0.4, 'causticPhotonsText', 'causticPhotons'],
+                [0.4, 'estimationPhotonsText', 'estimationPhotons'],
+                [0.4, 'estimationRadiusText', 'estimationRadius'],
+                # 'Does_it_Work',
                 ]                   
     visibility = {
                   'causticPhotonsText'      : { 'useCaustics': True },
@@ -227,7 +227,7 @@ class sunflow_tracing(declarative_property_group):
             'type': 'int',
             'attr': 'diffuseBounces',
             'name': 'Bounces',
-            'description': 'The maximum number of bounces that a diffuse ray can perform. A diffuse ray is used for indirect illumination such as color-bleeding (default 1) ',            
+            'description': 'The maximum number of bounces that a diffuse ray can perform. A diffuse ray is used for indirect illumination such as color-bleeding (default 1) ',
             'min': 0,
             'max': 1000,
             'default': 1,
@@ -242,7 +242,7 @@ class sunflow_tracing(declarative_property_group):
             'type': 'int',
             'attr': 'reflectionDepth',
             'name': 'Depth',
-            'description': 'Puts a maximum limit on ray-traced recursion (reflections of reflection of reflections...) (default 4) ',            
+            'description': 'Puts a maximum limit on ray-traced recursion (reflections of reflection of reflections...) (default 4) ',
             'min': 0,
             'max': 1000,
             'default': 4,
@@ -257,7 +257,7 @@ class sunflow_tracing(declarative_property_group):
             'type': 'int',
             'attr': 'refractionDepth',
             'name': 'Depth',
-            'description': 'Number of refractions the ray can perform (default 4).',            
+            'description': 'Number of refractions the ray can perform (default 4).',
             'min': 0,
             'max': 1000,
             'default': 4,
@@ -268,7 +268,7 @@ class sunflow_tracing(declarative_property_group):
             'attr': 'useCaustics',
             'name': 'Caustics',
             'description': 'Enable caustics in the scene',
-            'default': False,            
+            'default': False,
             'save_in_preset': True
         },
         {
@@ -280,7 +280,7 @@ class sunflow_tracing(declarative_property_group):
             'type': 'int',
             'attr': 'causticPhotons',
             'name': 'Photons',
-            'description': 'The maximum number of photons emitted (default 200000). ',            
+            'description': 'The maximum number of photons emitted (default 200000). ',
             'min': 0,
             'max':  200000000,
             'default': 200000,
@@ -295,7 +295,7 @@ class sunflow_tracing(declarative_property_group):
             'type': 'int',
             'attr': 'estimationPhotons',
             'name': 'Photons',
-            'description': 'The maximum number of photons emitted (default 100). ',            
+            'description': 'The maximum number of photons emitted (default 100). ',
             'min': 0,
             'max': 2000000,
             'default': 100,

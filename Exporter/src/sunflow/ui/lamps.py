@@ -23,7 +23,7 @@
 # Created on                          08-Aug-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
-
+ 
 import bpy, bl_ui
 
 from .. import SunflowAddon
@@ -40,7 +40,7 @@ class lamps(lamps_panel):
     bl_label = 'Sunflow Lamps'
     
     display_property_groups = [
-        ( ('lamp',), 'sunflow_lamp' )
+        (('lamp',), 'sunflow_lamp')
     ]
     
     # Overridden to draw some of blender's lamp controls
@@ -73,12 +73,12 @@ class lamps(lamps_panel):
                 wide_ui = context.region.width > narrowui
                 
                 if wide_ui:
-                    #col = split.column()
-                    col=layout.row()
+                    # col = split.column()
+                    col = layout.row()
                 else:
-                    col=layout.column()
+                    col = layout.column()
                 col.prop(lamp, "spot_size", text="Size")
-                col=layout.row()
+                col = layout.row()
                 col.prop(lamp, "show_cone")
 
             
@@ -87,21 +87,21 @@ class lamps(lamps_panel):
                 wide_ui = context.region.width > narrowui
                 
                 if wide_ui:
-                    #col = split.column()
-                    col=layout.row()
+                    # col = split.column()
+                    col = layout.row()
                 else:
-                    col=layout.column()
+                    col = layout.column()
                 col.prop(lamp.sky, "atmosphere_turbidity", text="Turbidity")
-                col=layout.row()
-                #FIXME: implement lightSunDirection in exporter then uncomment this
-                #col.prop(lamp.sunflow_lamp, "lightSunDirection", text="East Direction",  expand=True)
+                col = layout.row()
+                # FIXME: implement lightSunDirection in exporter then uncomment this
+                # col.prop(lamp.sunflow_lamp, "lightSunDirection", text="East Direction",  expand=True)
 
             # AREA LAMP: Blender Properties
             elif lamp.type == 'AREA':
                 if wide_ui:
-                    col=layout.row()
+                    col = layout.row()
                 else:
-                    col=layout.column()
+                    col = layout.column()
                 col.row().prop(lamp, "shape", expand=True)
                 sub = col.column(align=True)
 

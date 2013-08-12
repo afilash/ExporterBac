@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
-# ***** END GPL LICENCE BLOCK *****
+# ***** END GPL LICENCE BLOCK ***** 
 #
 # --------------------------------------------------------------------------
 # Blender Version                     2.68
@@ -78,7 +78,7 @@ class sunflow_material(declarative_property_group):
             'ambientDark',
             ['ambientSamples',
             'ambientDistance'],
-            #UBER
+            # UBER
             #--------------------------------------------------- 'diffuseColor',
             
             #-------------------------------------------------- 'specularColor',
@@ -95,7 +95,7 @@ class sunflow_material(declarative_property_group):
     
     visibility = {
            
-        'diffuseColor'      :{ 'type': LOR(['constant' , 'diffuse' , 'phong' , 'shiny' ,'glass', 'ward' , 'uber' , 'light']) },
+        'diffuseColor'      :{ 'type': LOR(['constant' , 'diffuse' , 'phong' , 'shiny' , 'glass', 'ward' , 'uber' , 'light']) },
         'specularColor'     :{ 'type': LOR(['phong' , 'ward' , 'uber' ]) },
         # CONST    
         'constantEmit'      :{ 'type':'constant' },
@@ -141,32 +141,32 @@ class sunflow_material(declarative_property_group):
             'name': 'Material Type',
             'description': 'Specifes the type of sunflow material',
             'items': [
-                ('constant','constant','surface variation wont be considered.'),
-                ('diffuse','Diffuse','Plain diffuse shader.'),
-                ('phong','Phong','Phong'),
-                ('shiny','Shiny','Shiny'),
-                ('glass','Glass','Glass'),
-                ('mirror','Mirror','Mirror'),
-                ('ward','Ward','Ward'),
-                ('amb-occ','Ambient Occlusion','Ambient Occlusion'),
-                ('uber','Uber','Diffuse ,Specular mix shader'),
-                ('janino','Janino','Java compile time shader'),
-                ('light','Light','If applied to an object , that object will be considered as a mesh light.')
+                ('constant', 'constant', 'surface variation wont be considered.'),
+                ('diffuse', 'Diffuse', 'Plain diffuse shader.'),
+                ('phong', 'Phong', 'Phong'),
+                ('shiny', 'Shiny', 'Shiny'),
+                ('glass', 'Glass', 'Glass'),
+                ('mirror', 'Mirror', 'Mirror'),
+                ('ward', 'Ward', 'Ward'),
+                ('amb-occ', 'Ambient Occlusion', 'Ambient Occlusion'),
+                ('uber', 'Uber', 'Diffuse ,Specular mix shader'),
+                ('janino', 'Janino', 'Java compile time shader'),
+                ('light', 'Light', 'If applied to an object , that object will be considered as a mesh light.')
             ],
             'default': 'diffuse',
             'save_in_preset': True
-        },  
+        },
         {
             'type': 'float',
             'attr': 'constantEmit',
             'name': 'Emit',
-            'description': 'Over driving color value to get color bleed in path tracing (default 1.0). ',  
+            'description': 'Over driving color value to get color bleed in path tracing (default 1.0). ',
             'min': 1.0,
             'max': 10.0,
             'default': 1.0,
-            'update'    : change_color,   
+            'update'    : change_color,
             'save_in_preset': True
-        },  
+        },
                   
         {
             'type'      : 'float_vector',
@@ -174,35 +174,35 @@ class sunflow_material(declarative_property_group):
             'attr'      : 'diffuseColor',
             'name'      : 'Diffuse',
             'description': 'Diffuse color.',
-            'default'   : (0.8,0.8,0.8),
+            'default'   : (0.8, 0.8, 0.8),
             'min'       : 0.0,
-            'max'       : 1.0,    
+            'max'       : 1.0,
             'update'    : change_color,
             'save_in_preset': True
-        }, 
+        },
         {
             'type'      : 'float_vector',
             'subtype'   : 'COLOR',
             'attr'      : 'specularColor',
             'name'      : 'Specular',
             'description': 'Specular color value.',
-            'default'   : (0.8,0.8,0.8),
+            'default'   : (0.8, 0.8, 0.8),
             'min'       : 0.0,
-            'max'       : 1.0,  
+            'max'       : 1.0,
             'update'    : change_color,
             'save_in_preset': True
-        }, 
+        },
         {
             'type'      : 'float_vector',
             'subtype'   : 'COLOR',
             'attr'      : 'glassAbsColor',
             'name'      : 'Absorption Color',
             'description': 'The color which is most attenuated inside the glass.',
-            'default'   : (0.8,0.8,0.8),
+            'default'   : (0.8, 0.8, 0.8),
             'min'       : 0.0,
-            'max'       : 1.0,         
+            'max'       : 1.0,
             'save_in_preset': True
-        }, 
+        },
                   
         {
             'type'      : 'float_vector',
@@ -210,54 +210,54 @@ class sunflow_material(declarative_property_group):
             'attr'      : 'mirrorReflection',
             'name'      : 'Reflection Strength',
             'description': 'Reflection strength.',
-            'default'   : (0.8,0.8,0.8),
+            'default'   : (0.8, 0.8, 0.8),
             'min'       : 0.0,
-            'max'       : 1.0,         
+            'max'       : 1.0,
             'save_in_preset': True
-        }, 
+        },
         {
             'type'      : 'float_vector',
             'subtype'   : 'COLOR',
             'attr'      : 'ambientBright',
             'name'      : 'Ambient Bright',
             'description': 'Ambient color.',
-            'default'   : (0.8,0.8,0.8),
+            'default'   : (0.8, 0.8, 0.8),
             'min'       : 0.0,
-            'max'       : 1.0,        
+            'max'       : 1.0,
             'save_in_preset': True
-        },  
+        },
         {
             'type'      : 'float_vector',
             'subtype'   : 'COLOR',
             'attr'      : 'ambientDark',
             'name'      : 'Ambient Dark',
             'description': 'Ambient Dark color.',
-            'default'   : (0.1,0.1,0.1),
+            'default'   : (0.1, 0.1, 0.1),
             'min'       : 0.0,
-            'max'       : 1.0,        
+            'max'       : 1.0,
             'save_in_preset': True
-        },   
+        },
         {
             'type': 'int',
             'attr': 'phongSamples',
             'name': 'Samples',
-            'description': 'The number of samples used to calculate the irradiance (default 8). ',            
+            'description': 'The number of samples used to calculate the irradiance (default 8). ',
             'min': 0,
             'max':   2048,
             'default' : 8 ,
             'save_in_preset': True
-        }, 
+        },
         {
             'type': 'int',
             'attr': 'phongSpecHardness',
             'name': 'Hardness',
-            'description': '"power" or hardness of the specularity (default 50). ',            
+            'description': '"power" or hardness of the specularity (default 50). ',
             'min': 0,
             'max': 50000,
             'default': 50,
             'update'    : change_color,
             'save_in_preset': True
-        },   
+        },
         {
             'type': 'float',
             'attr': 'shinyReflection',
@@ -266,19 +266,19 @@ class sunflow_material(declarative_property_group):
             'min': 0.0,
             'max': 1.0,
             'default': 0.01,
-            'slider'    : True, 
+            'slider'    : True,
             'save_in_preset': True
             
             # math.pow(10,4*val)
-        },                 
+        },
         {
             'type': 'bool',
             'attr': 'shinyExponent',
             'name': 'Exponent',
             'description': 'If set then the shiny reflection value is taken exponentially 0 means 1.0 and 1 means 10000.0(default False).',
-            'default': False,            
+            'default': False,
             'save_in_preset': True
-        },  
+        },
         {
             'type': 'float',
             'attr': 'glassETA',
@@ -323,22 +323,22 @@ class sunflow_material(declarative_property_group):
             'type': 'int',
             'attr': 'wardSamples',
             'name': 'Samples',
-            'description': 'indirect glossy reflections (default 4). ',            
+            'description': 'indirect glossy reflections (default 4). ',
             'min': 0,
             'max':   2048,
             'default' : 4 ,
             'save_in_preset': True
-        }, 
+        },
         {
             'type': 'int',
             'attr': 'ambientSamples',
             'name': 'Samples',
-            'description': 'Ambient Occlusion Samples (default 16). ',            
+            'description': 'Ambient Occlusion Samples (default 16). ',
             'min': 0,
             'max':   2048,
             'default' : 16 ,
             'save_in_preset': True
-        }, 
+        },
         {
             'type': 'float',
             'attr': 'ambientDistance',
@@ -384,12 +384,12 @@ class sunflow_material(declarative_property_group):
             'type': 'int',
             'attr': 'uberSamples',
             'name': 'Samples',
-            'description': 'Uber Samples (default 4). ',            
+            'description': 'Uber Samples (default 4). ',
             'min': 0,
             'max':   2048,
             'default' : 4 ,
             'save_in_preset': True
-        },    
+        },
         {
             'type': 'float',
             'attr': 'lightRadiance',
@@ -401,17 +401,17 @@ class sunflow_material(declarative_property_group):
             'max': 1e5,
             'soft_max': 1e5,
             'save_in_preset': True
-        }, 
+        },
         {
             'type': 'int',
             'attr': 'lightSamples',
             'name': 'Samples',
-            'description': 'Mesh light sampling (default 16). ',            
+            'description': 'Mesh light sampling (default 16). ',
             'min': 0,
             'max':   2048,
             'default' : 16 ,
             'save_in_preset': True
-        }, 
+        },
         {
             'type': 'string',
             'subtype': 'FILE_PATH',

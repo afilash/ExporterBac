@@ -23,7 +23,7 @@
 # Created on                          22-Jul-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
-
+ 
 import os
 import bpy
 from extensions_framework import log
@@ -35,7 +35,7 @@ def sunflowLog(*args, popup=False):
     Accepts variable args 
     '''
     if len(args) > 0:
-        log(' '.join(['%s'%a for a in args]), module_name='sunflow', popup=popup)
+        log(' '.join(['%s' % a for a in args]), module_name='sunflow', popup=popup)
 
 class sunflowFilmDisplay(TimerThread):
     '''

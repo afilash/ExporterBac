@@ -23,7 +23,7 @@
 # Created on                          07-Aug-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
-
+ 
 
 from .. import SunflowAddon
 
@@ -49,7 +49,7 @@ class sunflow_lamp(declarative_property_group):
             'type': 'int',
             'attr': 'lightSamples',
             'name': 'Samples',
-            'description': 'The number of samples used to calculate the irradiance (default 64). ',            
+            'description': 'The number of samples used to calculate the irradiance (default 64). ',
             'min': 0,
             'max':   8192,
             'default': 64,
@@ -103,7 +103,7 @@ class sunflow_lamp(declarative_property_group):
                   
     ] 
     
-    mapping =  [
+    mapping = [
                 ('point', 'point', 'light mapped to blender point type'),
                 ('meshlight', 'mesh', 'light mapped to blender mesh (see material tab)'),
                 ('spherical', 'hemi', 'light mapped to blender hemi type'),

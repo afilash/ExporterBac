@@ -24,7 +24,7 @@
 # Author                              NodeBench
 # --------------------------------------------------------------------------
 
-
+ 
 
 # System libs
 import os, time, threading, sys, copy, subprocess
@@ -37,23 +37,23 @@ from extensions_framework import util as efutil
 
 from .. import SunflowAddon, plugin_path
 
-#TODO sfrsFilmDisplay
+# TODO sfrsFilmDisplay
 from ..outputs import sunflowLog , sunflowFilmDisplay
 
 from ..export import (get_instance_materials, resolution, sunflowLaunch)
 
 
 
-#from ..export.scene import SceneExporter
+# from ..export.scene import SceneExporter
 #
 
 
 from ..properties import (camera , render , integrator , lamp , materials , renderlayers , world)
 
-#from ..properties import (
+# from ..properties import (
 #    engine, sampler, , lamp, texture,
 #    material, mesh, , world
-#)
+# )
 #
 
 
@@ -62,19 +62,19 @@ from ..properties import (camera , render , integrator , lamp , materials , rend
 
 from ..ui import (camera , render , lamps , materials , renderlayers , world)
 
-#from ..ui import (
+# from ..ui import (
 #    render, render_layer, lamps, materials, mesh, 
 #    camera, world
-#)
+# )
 #
 
 
-#from ..ui.materials import (
+# from ..ui.materials import (
 #    main, subsurface, medium, emitter
-#)
+# )
 #
 
-#from .. import operators
+# from .. import operators
 #
 
 
@@ -97,7 +97,7 @@ _register_elm(bl_ui.properties_render.RENDER_PT_dimensions, required=True)
 
 _register_elm(bl_ui.properties_scene.SCENE_PT_scene, required=True)
 _register_elm(bl_ui.properties_scene.SCENE_PT_audio)
-_register_elm(bl_ui.properties_scene.SCENE_PT_physics) #This is the gravity panel
+_register_elm(bl_ui.properties_scene.SCENE_PT_physics)  # This is the gravity panel
 _register_elm(bl_ui.properties_scene.SCENE_PT_keying_sets)
 _register_elm(bl_ui.properties_scene.SCENE_PT_keying_set_paths)
 _register_elm(bl_ui.properties_scene.SCENE_PT_unit)
@@ -129,7 +129,7 @@ _register_elm(bl_ui.properties_data_camera.DATA_PT_custom_props_camera)
 # DEFAULT PANELS
 compatible("properties_data_mesh")
 compatible("properties_texture")
-#compatible("properties_data_camera")
+# compatible("properties_data_camera")
 compatible("properties_particle")
 compatible("properties_data_speaker")
     
@@ -137,9 +137,9 @@ compatible("properties_data_speaker")
 
 @SunflowAddon.addon_register_class
 class RENDERENGINE_sunflow(bpy.types.RenderEngine):
-    bl_idname           = 'SUNFLOW_RENDER'
-    bl_label            = 'Sunflow'
-    bl_use_preview      = True
+    bl_idname = 'SUNFLOW_RENDER'
+    bl_label = 'Sunflow'
+    bl_use_preview = True
   
   
 
@@ -158,7 +158,7 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
 #            MtsLog('ERROR: The binary path is unspecified!')
 #            return
         
-        with self.render_lock:    # just render one thing at a time
+        with self.render_lock:  # just render one thing at a time
             if scene.name == 'preview':
                 self.render_preview(scene)
                 return

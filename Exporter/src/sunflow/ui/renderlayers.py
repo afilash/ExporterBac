@@ -23,7 +23,7 @@
 # Created on                          09-Aug-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
-
+ 
 
 import bpy, bl_ui
 
@@ -42,15 +42,15 @@ class SunflowRender_PT_configure(sunflow_rlayers):
     bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
-        ( ('scene',), 'sunflow_renderconfigure' )
+        (('scene',), 'sunflow_renderconfigure')
     ]        
             
                        
 @SunflowAddon.addon_register_class
 class SunflowRender_PT_quickpasses(sunflow_rlayers):
     bl_label = "Quick Passes"
-    #bl_options = {'DEFAULT_CLOSED'}
+    # bl_options = {'DEFAULT_CLOSED'}
     
     display_property_groups = [
-        ( ('scene',), 'sunflow_passes' )
+        (('scene',), 'sunflow_passes')
     ]    

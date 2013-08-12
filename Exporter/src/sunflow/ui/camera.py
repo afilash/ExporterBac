@@ -23,7 +23,7 @@
 # Created on                          07-Aug-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
-
+ 
 import bpy
 import bl_ui
 from extensions_framework.ui import property_group_renderer
@@ -38,11 +38,11 @@ class camera_panel(bl_ui.properties_data_camera.CameraButtonsPanel, property_gro
 @SunflowAddon.addon_register_class
 class SunflowRender_PT_sunflowcameratypes(camera_panel):
     bl_label = 'Camera Type'
-    #bl_options = {'DEFAULT_CLOSED'}
+    # bl_options = {'DEFAULT_CLOSED'}
     
     
     display_property_groups = [
-        ( ('camera',), 'sunflow_camera' )
+        (('camera',), 'sunflow_camera')
     ]
 #    if bpy.app.version < (2, 63, 5 ):
 #        def draw(self, context):
