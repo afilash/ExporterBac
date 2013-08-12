@@ -83,8 +83,8 @@ class sunflow_material(declarative_property_group):
             
             #-------------------------------------------------- 'specularColor',
             'uberSpecBlend',
-            'uberGlossy',
-            'uberSamples',
+            ['uberGlossy',
+            'uberSamples'],
             # LIGHT
             #--------------------------------------------------- 'diffuseColor',
             'lightRadiance',
@@ -118,10 +118,10 @@ class sunflow_material(declarative_property_group):
         'wardRoughY'        :{ 'type':'ward' },
         'wardSamples'       :{ 'type':'ward' },
         # AO
-        'ambientBright'     :{ 'type':'ambientocclusion' },
-        'ambientDark'       :{ 'type':'ambientocclusion' },
-        'ambientSamples'    :{ 'type':'ambientocclusion' },
-        'ambientDistance'   :{ 'type':'ambientocclusion' },
+        'ambientBright'     :{ 'type':'amb-occ' },
+        'ambientDark'       :{ 'type':'amb-occ' },
+        'ambientSamples'    :{ 'type':'amb-occ' },
+        'ambientDistance'   :{ 'type':'amb-occ' },
         # UBER
         'uberDiffBlend'     :{ 'type':'uber' },
         'uberSpecBlend'     :{ 'type':'uber' },
@@ -148,7 +148,7 @@ class sunflow_material(declarative_property_group):
                 ('glass','Glass','Glass'),
                 ('mirror','Mirror','Mirror'),
                 ('ward','Ward','Ward'),
-                ('ambientocclusion','Ambient Occlusion','Ambient Occlusion'),
+                ('amb-occ','Ambient Occlusion','Ambient Occlusion'),
                 ('uber','Uber','Diffuse ,Specular mix shader'),
                 ('janino','Janino','Java compile time shader'),
                 ('light','Light','If applied to an object , that object will be considered as a mesh light.')

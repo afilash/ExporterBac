@@ -38,7 +38,7 @@ class sunflow_lamp(declarative_property_group):
             'lightRadiance',
             'lightSamples',
             'lightShericalRadius',
-            'lightSunExtend',
+            'lightSunDirection',
     ]
     
     visibility = {}
@@ -79,10 +79,25 @@ class sunflow_lamp(declarative_property_group):
         },
         {
             'type': 'bool',
-            'attr': 'lightSunExtend',
+            'attr': 'lightSunDirection',
             'name': 'Extend Sun Sky',
             'description': 'Extend sun sky upto infenity (default False).',
             'default': False,
+            'save_in_preset': True
+        },
+        {
+            'type': 'enum',
+            'attr': 'lightSunDirection',
+            'name': 'East',
+            'description': 'Denotes east direction( where "z" is UP)',
+            'items': [
+                ('x+', '+X', '+ X'),
+                ('x-', '-X', '- X'),
+                ('y+', '+Y', '+ Y'),
+                ('y-', '-Y', '- Y'),
+            ],
+            'default': 'x+',
+            'expand' : True,
             'save_in_preset': True
         },
                   

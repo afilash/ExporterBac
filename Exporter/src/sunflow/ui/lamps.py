@@ -60,8 +60,9 @@ class lamps(lamps_panel):
             col = split.column()
 
             layout.prop(lamp, "color", text="Color")
-
-            layout.prop(lamp.sunflow_lamp, "lightRadiance", text="Radiance")
+            
+            if lamp.type != 'SUN':
+                layout.prop(lamp.sunflow_lamp, "lightRadiance", text="Radiance")
             
             if not lamp.type in ['SPOT', 'POINT']:
                 layout.prop(lamp.sunflow_lamp, "lightSamples", text="Samples")
@@ -80,6 +81,20 @@ class lamps(lamps_panel):
                 col=layout.row()
                 col.prop(lamp, "show_cone")
 
+            
+            # SUN LAMP: Blender Properties
+            if lamp.type == 'SUN':
+                wide_ui = context.region.width > narrowui
+                
+                if wide_ui:
+                    #col = split.column()
+                    col=layout.row()
+                else:
+                    col=layout.column()
+                col.prop(lamp.sky, "atmosphere_turbidity", text="Turbidity")
+                col=layout.row()
+                #FIXME: implement lightSunDirection in exporter then uncomment this
+                #col.prop(lamp.sunflow_lamp, "lightSunDirection", text="East Direction",  expand=True)
 
             # AREA LAMP: Blender Properties
             elif lamp.type == 'AREA':
