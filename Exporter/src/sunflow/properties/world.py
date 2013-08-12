@@ -60,6 +60,16 @@ class sunflow_world(declarative_property_group):
                   'worldUPtext'     : { 'worldLighting': 'ibl' },
                   'worldUP'         : { 'worldLighting': 'ibl' },
                   }
+    def set_worldUp(self, context):
+        if   self.worldUP == 'x':
+            self.worldUPString = '1  0  0'
+        elif self.worldUP == 'y':
+            self.worldUPString = '0  1  0'
+        elif self.worldUP == 'z':
+            self.worldUPString = '0  0  1'
+        else:
+            self.worldUPString = '0  0  1'
+            
     enabled = {}
     alert = {}
     properties = [
@@ -104,7 +114,15 @@ class sunflow_world(declarative_property_group):
                 ('y', 'Y', 'y.'),
                 ('z', 'Z', 'z.'),                             
             ],
+            'update' : set_worldUp,
             'expand' : True,
+            'save_in_preset': True
+        },
+        {
+            'type': 'string',
+            'attr': 'worldUPString' ,            
+            'name': 'worldUPString' ,
+            'default': '0  0  1',
             'save_in_preset': True
         },
         {
