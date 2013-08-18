@@ -60,6 +60,7 @@ class sunflow_world(declarative_property_group):
                   'worldUPtext'     : { 'worldLighting': 'ibl' },
                   'worldUP'         : { 'worldLighting': 'ibl' },
                   }
+    
     def set_worldUp(self, context):
         if   self.worldUP == 'x':
             self.worldUPString = '1  0  0'

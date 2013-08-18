@@ -43,26 +43,38 @@ class sunflow_lamp(declarative_property_group):
     
     visibility = {}
     
+    def set_lightSunDirection(self, context):
+        if   self.lightSunDirection == 'x+':
+            self.lightSunEast = '1  0  0'
+        elif self.lightSunDirection == 'y+':
+            self.lightSunEast = '0  1  0'
+        elif self.lightSunDirection == 'x-':
+            self.lightSunEast = '-1  0  0'
+        elif self.lightSunDirection == 'y-':
+            self.lightSunEast = '0  -1  0'
+        else:
+            self.lightSunEast = '1  0  0'
+    
     properties = [
         
         {
             'type': 'int',
             'attr': 'lightSamples',
             'name': 'Samples',
-            'description': 'The number of samples used to calculate the irradiance (default 64). ',
+            'description': 'The number of samples used to calculate the irradiance (default 8). ',
             'min': 0,
             'max':   8192,
-            'default': 64,
+            'default': 8,
             'save_in_preset': True
         },
         {
             'type': 'float',
             'attr': 'lightShericalRadius',
             'name': 'Sherical Radius',
-            'description': 'Radius of the sphere light (default 10.0).',
-            'default': 10.0,
+            'description': 'Radius of the sphere light (default 1.0).',
+            'default': 1.0,
             'min': 0.0,
-            'max': 10000.0,
+            'max': 1000.0,
             'save_in_preset': True
         },
         {
@@ -70,16 +82,14 @@ class sunflow_lamp(declarative_property_group):
             'attr': 'lightRadiance',
             'name': 'Radiance',
             'description': 'Specifies the intensity of the light source',
-            'default': 10.0,
+            'default': 200.0,
             'min': 0.0,
-            'soft_min': 1e-3,
             'max': 1e5,
-            'soft_max': 1e5,
             'save_in_preset': True
         },
         {
             'type': 'bool',
-            'attr': 'lightSunDirection',
+            'attr': 'lightSunDirectionExtend',
             'name': 'Extend Sun Sky',
             'description': 'Extend sun sky upto infenity (default False).',
             'default': False,
@@ -97,7 +107,15 @@ class sunflow_lamp(declarative_property_group):
                 ('y-', '-Y', '- Y'),
             ],
             'default': 'x+',
+            'update' : set_lightSunDirection,
             'expand' : True,
+            'save_in_preset': True
+        },
+        {
+            'type': 'string',
+            'attr': 'lightSunEast' ,
+            'name': 'lightSunEast' ,
+            'default': '1  0  0',
             'save_in_preset': True
         },
                   
