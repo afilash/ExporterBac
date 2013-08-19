@@ -27,7 +27,7 @@
  
 
 # System libs
-import os, time, threading, sys, copy, subprocess
+import os, time, threading, sys, copy, subprocess, random
 
 # Blender libs
 import bpy, bl_ui
@@ -134,6 +134,11 @@ compatible("properties_data_speaker")
     
     
 
+
+
+
+
+
 @SunflowAddon.addon_register_class
 class RENDERENGINE_sunflow(bpy.types.RenderEngine):
     bl_idname = 'SUNFLOW_RENDER'
@@ -184,6 +189,9 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             javapath = efutil.find_config_value('sunflow', 'defaults', 'java_path', '')
             memory = "-Xmx%sm" % efutil.find_config_value('sunflow', 'defaults', 'memoryalloc', '')
             image_name = "%s.%03d.%s" % (scene.name , scene.frame_current, arguments['format'])
+            if scene.sunflow_performance.useRandom:
+                image_name = self.check_randomname(output_dir, image_name)
+            
             sunflow_file = "%s.%03d.sc" % (scene.name , scene.frame_current)
             image_file = os.path.abspath(os.path.join(output_dir , image_name))
             sc_file_path = os.path.abspath(os.path.join(output_dir , sunflow_file))
@@ -214,7 +222,15 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
     
     
         
-    
+    def check_randomname(self , output_dir, image_name):
+        new_name = image_name
+        while (os.path.exists(os.path.join(output_dir, new_name))):
+            num = str(random.randint(10000, 99999))
+            tname = image_name.split('.')
+            tname.insert(-1, num)
+            new_name = '.'.join(tname)
+        return new_name
+        
     def getCommandLineArgs(self , scene):
         argument = {}
         quickmappings = {

@@ -384,6 +384,9 @@ def write_mesh_file(objects_namelist, scene, Donot_Allow_Instancing=True, mblurl
                 for matrix_each in range(steps):
                     trans_mat.append(transform_matrix[matrix_each][item_index - 1])
                 item_name = "%s.item.%03d" % (Object_name, item_index)
+            elif is_dupli :
+                trans_mat = transform_matrix[:]
+                item_name = "%s.item.%03d" % (Object_name, item_index)
             else:
                 trans_mat = transform_matrix[:]
                 item_name = Object_name

@@ -27,6 +27,7 @@
 
 
 import os
+import bpy
 import copy
 # Framework libs
 from extensions_framework import util as efutil
@@ -84,3 +85,22 @@ def dmix(MasterDict, InputDict , TargetName):
         MasterDict[TargetName] = {}        
     for keys in InputDict.keys():
         MasterDict[TargetName][keys] = InputDict[keys]
+
+
+def is_dupli_child(object_name):
+    # FIXME: for testing only
+    return False
+    if not bpy.context.scene.render.use_instances:
+        return False
+    if object_name in [ obj.name for obj in  bpy.context.scene.objects]:
+        obj = bpy.context.scene.objects[object_name]
+        # print(" %s parent %s " % (object_name, obj.parent.name))        
+        if  hasattr(obj.parent , 'dupli_type'):
+            return obj.parent.dupli_type not in ['NONE']
+        else:
+            return False
+    else:
+        return False
+    
+    
+        

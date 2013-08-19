@@ -26,8 +26,11 @@
 
 import math
 
-def getPos(obj, as_matrix=True):
+def getPos(obj , as_matrix=True):
+    org_mat = obj.matrix_original.copy()
     obj_mat = obj.matrix.copy()
+    org_mat = org_mat.inverted()
+    obj_mat = org_mat * obj_mat
     matrix_rows = [ "%+0.4f" % element for rows in obj_mat for element in rows ]
     return (matrix_rows)
     
@@ -65,7 +68,7 @@ def InstanceExporter(scene , objname, turn_on_motion_blur, steps=0):
         frame_steps = [ mb_start + n for n in range(0, steps) ]
         transform = [ [] for dummy_i in range(num_dupli)] 
         for sub_frame in frame_steps:
-            scene.frame_set(sub_frame, current_subframe)            
+            scene.frame_set(sub_frame, current_subframe) 
             obj_parent.dupli_list_create(scene)
             for objindx in range(num_dupli) :
                 xpos = getPos(obj_parent.dupli_list[objindx], as_matrix=True)
