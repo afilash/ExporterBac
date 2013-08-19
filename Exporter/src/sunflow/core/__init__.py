@@ -39,7 +39,6 @@ from .. import SunflowAddon, plugin_path
 
 # TODO sfrsFilmDisplay
 from ..outputs import sunflowLog , sunflowFilmDisplay
-
 # from ..export import ()
 
 
@@ -74,8 +73,8 @@ from ..ui import (camera , render , lamps , materials , renderlayers , world)
 # )
 #
 
-# from .. import operators
-#
+from .. import operators
+
 
 
 def _register_elm(elm, required=False):
@@ -146,55 +145,125 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
     render_lock = threading.Lock()
     
 
-    def render_preview(self, scene):
-        print("Render Preview Initiated")
-    
-    
     def render(self, scene):
+
         if self is None or scene is None:
             print('ERROR: Scene is missing!')
             return
-#        if scene.mitsuba_engine.binary_path == '':
-#            MtsLog('ERROR: The binary path is unspecified!')
-#            return
+
         
         with self.render_lock:  # just render one thing at a time
             if scene.name == 'preview':
                 self.render_preview(scene)
                 return
             print("Main Render")
-            
-            
-            config_updates = {}
-            
-            jar_path = os.path.abspath(efutil.filesystem_path(scene.sunflow_renderconfigure.sunflowPath))
-            if os.path.isdir(jar_path) and os.path.exists(jar_path):
-                config_updates['jar_path'] = jar_path
+            print(self.is_animation)
+                        
+            scene_path = efutil.filesystem_path(scene.render.filepath)
+            if os.path.isdir(scene_path):
+                output_dir = scene_path
             else:
-                print("Unable to find path jar_path")
+                output_dir = os.path.dirname(scene_path)        
             
-            java_path = os.path.abspath(efutil.filesystem_path(scene.sunflow_renderconfigure.javaPath))
-            if os.path.isdir(java_path) and os.path.exists(java_path):
-                config_updates['java_path'] = java_path
-            else:
-                print("Unable to find path java_path")
-                
+            output_dir = os.path.abspath(os.path.join(output_dir , efutil.scene_filename()))
+            print('Sunflow: Current directory = "%s"' % output_dir)
             
-            memoryalloc = scene.sunflow_renderconfigure.memoryAllocated
-            config_updates['memoryalloc'] = memoryalloc
+            if not os.path.exists(output_dir):
+                os.mkdir(output_dir)
 
-                
-            try:
-                for k, v in config_updates.items():
-                    efutil.write_config_value('sunflow', 'defaults', k, v)
-                    print("writing values")
-            except Exception as err:
-                print('WARNING: Saving sunflow configuration failed, please set your user scripts dir: %s' % err)
             
+            # (dict , output_dir, scene.name, scene.frame_current)
+            
+            
+            args = self.getCommandLineArgs(scene)
+            for key  in args.items():
+                print(key)
+            
+            jarpath = efutil.find_config_value('sunflow', 'defaults', 'jar_path', '')
+            javapath = efutil.find_config_value('sunflow', 'defaults', 'java_path', '')
+            memory = efutil.find_config_value('sunflow', 'defaults', 'memoryalloc', '')
+            
+            print(jarpath)
+            print(javapath)
+            print(memory)
+            memory = "-Xmx%sm" % memory
 
+            render_format = "%s.%03d.%s" % (scene.name , scene.frame_current, args['format'])
+            sunflow_file = "%s.%03d.sc" % (scene.name , scene.frame_current)
+            full_render_format = os.path.abspath(os.path.join(output_dir , render_format))
+            full_sunflow_file = os.path.abspath(os.path.join(output_dir , sunflow_file))
+            cmd_line = [ javapath , memory , '-server' , '-jar' , jarpath , '-o', full_render_format , full_sunflow_file]
+            
+            
+            print(cmd_line)
+            subprocess.Popen(cmd_line)
+
+
+    def render_preview(self, scene):
+        print("Render Preview Initiated")
     
-
-
-
-if __name__ == '__main__':
-    pass
+    
+        
+    
+    def getCommandLineArgs(self , scene):
+        argument = {}
+        quickmappings = {
+                        'quicknone': '',
+                        'quickuvs': '-quick_uvs',
+                        'quicknormals': '-quick_normals',
+                        'quickid': '-quick_id',
+                        'quickprims': '-quick_prims',
+                        'quickgray': '-quick_gray',
+                        'quickwire': '-quick_wire',
+                        'quickambocc': '-quick_ambocc'  ,
+                         }
+        if  scene.sunflow_passes.quickmode == 'quickwire':
+            extra = " -aa %s %s -filter %s " % (scene.sunflow_antialiasing.adaptiveAAMin , scene.sunflow_antialiasing.adaptiveAAMax, scene.sunflow_antialiasing.imageFilter)
+        elif scene.sunflow_passes.quickmode == 'quickambocc':
+            extra = " %s " % scene.sunflow_passes.distOcclusion
+        else:
+            extra = ""        
+        argument['quick'] = quickmappings[scene.sunflow_passes.quickmode] + extra
+        
+        if scene.render.threads_mode == 'FIXED':
+            threads = "-threads %s" % scene.render.threads
+        else:
+            threads = ''       
+        argument['threads'] = threads
+        
+    #     if scene.sunflow_performance.useCacheObjects:
+    #         argument['usecache'] = True
+    #     else:
+    #         argument['usecache'] = False
+            
+        if scene.sunflow_performance.useSmallMesh:
+            argument['smallmesh'] = '-smallmesh'
+        else:
+            argument['smallmesh'] = ''
+            
+        if scene.sunflow_performance.threadHighPriority  :
+            argument['threadprio'] = '-hipri'
+        else:
+            argument['threadprio'] = ''
+            
+        if scene.sunflow_performance.enableVerbosity:
+            argument['verbosity'] = '-verbosity 4'
+        else:
+            argument['verbosity'] = ''
+            
+    #     if scene.render.use_instances:
+    #         argument['useinstances'] = True
+    #     else:
+    #         argument['useinstances'] = False
+    
+        if getattr(scene , 'camera') is not None:
+            argument['format'] = scene.camera.data.sunflow_film.fileExtension
+        else:
+            argument['format'] = 'png'
+            
+        
+              
+        return argument
+        
+            
+            

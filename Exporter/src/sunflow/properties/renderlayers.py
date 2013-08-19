@@ -56,7 +56,7 @@ class sunflow_renderconfigure(declarative_property_group):
             'attr'      : 'sunflowPath',
             'subtype'   : 'FILE_PATH',
             'name'      : 'Sunflow Path',
-            'description': 'Path to sunflow rendering system jar file (just directory value dont include *.jar at end).',
+            'description': 'Path to sunflow rendering system sunflow.jar file.',
             'default'   : efutil.find_config_value('sunflow', 'defaults', 'jar_path', ''),
             'save_in_preset': True
         },
@@ -65,7 +65,7 @@ class sunflow_renderconfigure(declarative_property_group):
             'attr'      : 'javaPath',
             'subtype'   : 'FILE_PATH',
             'name'      : 'Java Server Path',
-            'description': 'Path to Java bin file of the server',
+            'description': 'Path to Java.exe file of the server',
             'default'   : efutil.find_config_value('sunflow', 'defaults', 'java_path', ''),
             'save_in_preset': True
         },

@@ -39,11 +39,42 @@ def sunflowLog(*args, popup=False):
 
 class sunflowFilmDisplay(TimerThread):
     '''
-    Periodically update render result with sunflow's framebuffer
+    Periodically update render result with Mituba's framebuffer
     '''
     
-    #===========================================================================
-    # TODO
-    # don't know how to implement in the current situation
-    #===========================================================================
-    pass
+    STARTUP_DELAY = 1
+    
+    def begin(self, renderer, output_file, resolution, preview=False):
+        (self.xres, self.yres) = (int(resolution[0]), int(resolution[1]))
+        self.renderer = renderer
+        self.output_file = output_file
+        self.resolution = resolution
+        self.preview = preview
+        if not self.preview:
+            self.result = self.renderer.begin_result(0, 0, self.xres, self.yres)
+        self.start()
+    
+    def shutdown(self):
+        if not self.preview:
+            self.renderer.end_result(self.result, 0)
+    
+    def kick(self, render_end=False):
+        if not bpy.app.background or render_end:
+            if os.path.exists(self.output_file):
+                if render_end:
+                    sunflowLog('Final render result %ix%i' % self.resolution)
+                else:
+                    sunflowLog('Updating render result %ix%i' % self.resolution)
+                try:
+                    if self.preview:
+                        self.result = self.renderer.begin_result(0, 0, self.xres, self.yres)
+                        self.result.layers[0].load_from_file(self.output_file)
+                        self.renderer.end_result(self.result, 0)
+                    else:
+                        self.result.layers[0].load_from_file(self.output_file)
+                        self.renderer.update_result(self.result)
+                except:
+                    pass
+            else:
+                err_msg = 'ERROR: Could not load render result from %s' % self.output_file
+                sunflowLog(err_msg)

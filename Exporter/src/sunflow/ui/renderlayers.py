@@ -44,7 +44,25 @@ class SunflowRender_PT_configure(sunflow_rlayers):
     display_property_groups = [
         (('scene',), 'sunflow_renderconfigure')
     ]        
-            
+         
+        
+    def draw(self, context):
+        super().draw(context)
+        
+        layout = self.layout
+
+
+        # Create two columns, by using a split layout.
+        split = layout.split()
+
+        # First column
+        
+        
+        col = split.column()        
+        col = split.column()  
+        col.operator('sunflow.save_settings', icon='SAVE_PREFS')   
+        
+        
                        
 @SunflowAddon.addon_register_class
 class SunflowRender_PT_quickpasses(sunflow_rlayers):

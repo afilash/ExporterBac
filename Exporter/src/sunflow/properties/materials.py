@@ -90,7 +90,7 @@ class sunflow_material(declarative_property_group):
             'lightRadiance',
             'lightSamples',
             # JANI
-            'janinoPath',
+            # 'janinoPath',
     ]
     
     visibility = {
@@ -131,7 +131,7 @@ class sunflow_material(declarative_property_group):
         'lightRadiance'     :{ 'type':'light' },
         'lightSamples'      :{ 'type':'light' },
         # JANI
-        'janinoPath'        :{ 'type':'janino' },
+        # 'janinoPath'        :{ 'type':'janino' },
                   }
     
     properties = [
@@ -150,7 +150,7 @@ class sunflow_material(declarative_property_group):
                 ('ward', 'Ward', 'Ward'),
                 ('amb-occ', 'Ambient Occlusion', 'Ambient Occlusion'),
                 ('uber', 'Uber', 'Diffuse ,Specular mix shader'),
-                ('janino', 'Janino', 'Java compile time shader'),
+                # ('janino', 'Janino', 'Java compile time shader'),
                 ('light', 'Light', 'If applied to an object , that object will be considered as a mesh light.')
             ],
             'default': 'diffuse',
@@ -165,6 +165,7 @@ class sunflow_material(declarative_property_group):
             'max': 10.0,
             'default': 1.0,
             'update'    : change_color,
+            'slider': True,
             'save_in_preset': True
         },
                   
