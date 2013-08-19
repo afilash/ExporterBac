@@ -20,7 +20,152 @@
 # --------------------------------------------------------------------------
 # Blender Version                     2.68
 # Exporter Version                    0.0.1
-# Created on                          19-Jul-2013
+# Created on                          14-Aug-2013
 # Author                              NodeBench
 # --------------------------------------------------------------------------
 
+import bpy
+
+from .camera import getSceneCamera
+from .shaders import getShadersInScene
+from .lamps import getLamps
+from .illumination import getIlluminationSettings
+from .instances import InstanceExporter
+from .meshes import write_mesh_file
+from .makescfiles import SunflowSCFileSerializer
+from .services import dmix
+from .services import dict_merge
+
+
+def getExporter(filepath , scenename='', framenumber=1):
+    
+    #===========================================================================
+    # obj = objname , [material_list] , [modifiers_list] , object_def_file_path
+    # inst= instname , actualobject , transteps[]
+    #===========================================================================
+    
+    ObjectsRepository = {
+                'MotionBlurObjects':{},
+                'MeshLightObjects':{},
+                'ExportedObjects':{},
+                'Instances':{},
+                'Instantiated':{},
+                'Particles' :{},
+                         }
+    
+    scene = bpy.context.scene   
+    Export_instances = scene.render.use_instances
+    
+    # CAMERA EXPORT    
+    xportdict = getSceneCamera(scene)
+    ObjectsRepository = dict_merge(ObjectsRepository , xportdict)
+    del xportdict 
+    
+    # MATERIAL EXPORT 
+    xportdict = getShadersInScene(scene)
+    ObjectsRepository = dict_merge(ObjectsRepository , xportdict)
+    del xportdict 
+        
+    # LIGHT EXPORT 
+    xportdict = getLamps(scene)
+    ObjectsRepository = dict_merge(ObjectsRepository , xportdict)
+    del xportdict
+    
+    # RENDER SETTINGS 
+    xportdict = getIlluminationSettings(scene)
+    ObjectsRepository = dict_merge(ObjectsRepository , xportdict)
+    del xportdict
+    
+    # MESH EXPORT 
+    ObjectsExporter(scene , ObjectsRepository, Export_instances)
+    
+        
+#     filepath = r"E:\Graphics\Works\testbuildsfor253\268tests"
+#     framenumber = 1
+#     scenename = 'Scene'
+    
+    Serializer = SunflowSCFileSerializer(ObjectsRepository, filepath, scenename, framenumber)
+    Serializer.makeSunflowSCFiles()
+    
+    print("{")
+    for keys in ObjectsRepository.keys():
+        print("'%s':" % keys)
+        print(ObjectsRepository[keys])
+        print(",")
+#         for each in ObjectsRepository[keys].items():
+#             print(each)
+    print("}")
+    
+    # free memory
+    del Serializer
+    del ObjectsRepository
+
+    #===========================================================================
+    # for key in ObjectsRepository.keys():
+    #     print("KEYS> %s" % key)
+    #===========================================================================
+ 
+#     key = 'Instances'
+#     if key in ObjectsRepository.keys():
+#         for each in ObjectsRepository[key].items():
+#             print("From Shader >>")
+#             print (each)
+            
+    
+
+ 
+    
+def ObjectsExporter(scene , ObjectsRepository={}, Export_instances=False): 
+    
+    # filter objects - avoid camera , lamp
+    obj_lst = [ obj.name  for obj in scene.objects if obj.type not in ['CAMERA', 'LAMP'] ]
+    
+    # filter objects - avoid meshlights ; these are not objects but lights    
+    # nonlights = [obj for obj in obj_lst if obj not in ObjectsRepository['MeshLightObjects'].keys() ]
+    # obj_lst = nonlights
+    
+    MotionBlurList = [ key for key in ObjectsRepository['MotionBlurObjects'].keys()]
+    if Export_instances:
+        proxy_list = {}
+        
+        for objname in obj_lst:
+            turn_on_motion_blur = False
+            mblur_steps = 0
+            if objname in MotionBlurList :
+                mblur_steps = scene.camera.data.sunflow_camera.shutterTime
+                turn_on_motion_blur = True        
+            cur_object = scene.objects[objname]
+
+            
+            if (
+                (cur_object.is_duplicator) & 
+                (cur_object.children != ()) & 
+                (cur_object.dupli_type in ['VERTS' , 'FACES' ]) 
+                ):
+                dupli_list = InstanceExporter(scene , objname , turn_on_motion_blur , mblur_steps)
+                dmix(ObjectsRepository, dupli_list, 'Instances')
+                proxy_list[objname] = True
+                print ("Instantiated>> %s" % objname)
+                if objname in  MotionBlurList:
+                    MotionBlurList.pop(MotionBlurList.index(objname))
+            if (
+                (cur_object.is_duplicator) & 
+                (cur_object.children == ()) & 
+                (cur_object.dupli_type in ['GROUP' , 'FRAMES']) 
+                ):
+                dupli_list = InstanceExporter(scene , objname , turn_on_motion_blur , mblur_steps)
+                dmix(ObjectsRepository, dupli_list, 'Instances')
+                proxy_list[objname] = True
+                print ("Instantiated>> %s" % objname)
+                if objname in  MotionBlurList:
+                    MotionBlurList.pop(MotionBlurList.index(objname))
+            dmix(ObjectsRepository, proxy_list, 'Instantiated')
+            
+            
+        # filter objects - avoid instances ;         
+        noninst = [obj for obj in obj_lst if obj not in ObjectsRepository['Instantiated'].keys() ]
+        obj_lst = noninst 
+        # print(obj_lst)   
+    
+    ObjectsRepository['ExportedObjects'] = write_mesh_file(obj_lst, scene, not Export_instances , MotionBlurList , scene.camera.data.sunflow_camera.shutterTime)
+    

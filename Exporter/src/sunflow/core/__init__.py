@@ -39,7 +39,7 @@ from .. import SunflowAddon, plugin_path
 
 # TODO sfrsFilmDisplay
 from ..outputs import sunflowLog , sunflowFilmDisplay
-# from ..export import ()
+from ..export import (getExporter)
 
 
 
@@ -172,12 +172,12 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
                 os.mkdir(output_dir)
 
             
-            # (dict , output_dir, scene.name, scene.frame_current)
+            getExporter (output_dir, scene.name, scene.frame_current)
             
             
             args = self.getCommandLineArgs(scene)
-            for key  in args.items():
-                print(key)
+#             for key  in args.items():
+#                 print(key)
             
             jarpath = efutil.find_config_value('sunflow', 'defaults', 'jar_path', '')
             javapath = efutil.find_config_value('sunflow', 'defaults', 'java_path', '')
