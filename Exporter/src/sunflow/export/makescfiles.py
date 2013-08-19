@@ -399,7 +399,7 @@ class SunflowSCFileSerializer():
     def makeSunflowSCFiles(self):
         '''Call this method to generate the .sc, .geo.sc, .ins.sc files'''
         if not self._getFolderPath():
-            return "Failed"
+            return False
         self._populate_MeshLightObjects()
         self._populate_modifiers()
         self._getObjectsList()
@@ -409,6 +409,7 @@ class SunflowSCFileSerializer():
         self._compileInstanceBlocks()
         self._compileMainBlock()
         self._deleteTempFiles()
+        return True
         
         
 

@@ -66,6 +66,22 @@ class sunflow_performance(declarative_property_group):
         },
         {
             'type': 'bool',
+            'attr': 'ipr',
+            'name': 'IPR',
+            'description': 'progressive rendering.',
+            'default' : False,
+            'save_in_preset': True
+        },
+        {
+            'type': 'bool',
+            'attr': 'useRandom',
+            'name': 'Random',
+            'description': 'save render image using random number at end.',
+            'default' : True,
+            'save_in_preset': True
+        },
+        {
+            'type': 'bool',
             'attr': 'threadHighPriority',
             'name': 'High Priority',
             'description': 'Set sunflow thread priority to high (default is low priority).',

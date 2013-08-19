@@ -136,6 +136,8 @@ class SunflowRender_PT_performance(SunflowRenderPanel):
         sub.prop(sfperf, "useSmallMesh")
         sub.prop(sfperf, "threadHighPriority")
         sub.prop(sfperf, "enableVerbosity")
+        sub.prop(sfperf, "ipr")
+        sub.prop(sfperf, "useRandom")
         sub.prop(rd, "use_instances", text="Instances")
         
         super().draw(context)

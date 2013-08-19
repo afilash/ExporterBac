@@ -150,13 +150,12 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         if self is None or scene is None:
             print('ERROR: Scene is missing!')
             return
-
         
         with self.render_lock:  # just render one thing at a time
             if scene.name == 'preview':
                 self.render_preview(scene)
                 return
-            print("Main Render")
+
             print(self.is_animation)
                         
             scene_path = efutil.filesystem_path(scene.render.filepath)
@@ -165,36 +164,47 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             else:
                 output_dir = os.path.dirname(scene_path)        
             
-            output_dir = os.path.abspath(os.path.join(output_dir , efutil.scene_filename()))
-            print('Sunflow: Current directory = "%s"' % output_dir)
-            
+            output_dir = os.path.abspath(os.path.join(output_dir , efutil.scene_filename()))            
             if not os.path.exists(output_dir):
                 os.mkdir(output_dir)
-
+            # print('Sunflow: Current directory = "%s"' % output_dir)
             
-            getExporter (output_dir, scene.name, scene.frame_current)
+            if not getExporter (output_dir, scene.name, scene.frame_current):
+                return 
+            
+            if self.is_animation:
+                return
+            
+            arguments = self.getCommandLineArgs(scene)
             
             
-            args = self.getCommandLineArgs(scene)
-#             for key  in args.items():
-#                 print(key)
+                    
             
             jarpath = efutil.find_config_value('sunflow', 'defaults', 'jar_path', '')
             javapath = efutil.find_config_value('sunflow', 'defaults', 'java_path', '')
-            memory = efutil.find_config_value('sunflow', 'defaults', 'memoryalloc', '')
-            
-            print(jarpath)
-            print(javapath)
-            print(memory)
-            memory = "-Xmx%sm" % memory
-
-            render_format = "%s.%03d.%s" % (scene.name , scene.frame_current, args['format'])
+            memory = "-Xmx%sm" % efutil.find_config_value('sunflow', 'defaults', 'memoryalloc', '')
+            image_name = "%s.%03d.%s" % (scene.name , scene.frame_current, arguments['format'])
             sunflow_file = "%s.%03d.sc" % (scene.name , scene.frame_current)
-            full_render_format = os.path.abspath(os.path.join(output_dir , render_format))
-            full_sunflow_file = os.path.abspath(os.path.join(output_dir , sunflow_file))
-            cmd_line = [ javapath , memory , '-server' , '-jar' , jarpath , '-o', full_render_format , full_sunflow_file]
+            image_file = os.path.abspath(os.path.join(output_dir , image_name))
+            sc_file_path = os.path.abspath(os.path.join(output_dir , sunflow_file))
             
+            cmd_line = [ javapath , memory , '-server' , '-jar' , jarpath ]
+            final_line = ['-o', image_file , sc_file_path]     
             
+            extra = []
+            for key in arguments:
+                if key == 'format':
+                    continue
+                if arguments[key] != '':
+                    values = arguments[key].split()
+                    print(values)
+                    extra.extend(values)
+            
+            if arguments['format'] != 'png':
+                extra.append('-nogui')
+            
+            cmd_line.extend(extra)
+            cmd_line.extend(final_line)
             print(cmd_line)
             subprocess.Popen(cmd_line)
 
@@ -247,9 +257,15 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             argument['threadprio'] = ''
             
         if scene.sunflow_performance.enableVerbosity:
-            argument['verbosity'] = '-verbosity 4'
+            argument['verbosity'] = '-v 4'
         else:
             argument['verbosity'] = ''
+            
+        if scene.sunflow_performance.ipr:
+            argument['ipr'] = '-ipr'
+        else:
+            argument['ipr'] = ''
+            
             
     #     if scene.render.use_instances:
     #         argument['useinstances'] = True

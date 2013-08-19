@@ -39,11 +39,6 @@ from .services import dict_merge
 
 def getExporter(filepath , scenename='', framenumber=1):
     
-    #===========================================================================
-    # obj = objname , [material_list] , [modifiers_list] , object_def_file_path
-    # inst= instname , actualobject , transteps[]
-    #===========================================================================
-    
     ObjectsRepository = {
                 'MotionBlurObjects':{},
                 'MeshLightObjects':{},
@@ -79,39 +74,33 @@ def getExporter(filepath , scenename='', framenumber=1):
     # MESH EXPORT 
     ObjectsExporter(scene , ObjectsRepository, Export_instances)
     
-        
-#     filepath = r"E:\Graphics\Works\testbuildsfor253\268tests"
-#     framenumber = 1
-#     scenename = 'Scene'
-    
     Serializer = SunflowSCFileSerializer(ObjectsRepository, filepath, scenename, framenumber)
-    Serializer.makeSunflowSCFiles()
+    retCode = Serializer.makeSunflowSCFiles()
     
-    print("{")
-    for keys in ObjectsRepository.keys():
-        print("'%s':" % keys)
-        print(ObjectsRepository[keys])
-        print(",")
-#         for each in ObjectsRepository[keys].items():
-#             print(each)
-    print("}")
+    
+#     print("{")
+#     for keys in ObjectsRepository.keys():
+#         print("'%s':" % keys)
+#         print(ObjectsRepository[keys])
+#         print(",")
+# #         for each in ObjectsRepository[keys].items():
+# #             print(each)
+#     print("}")
+    
+    
     
     # free memory
     del Serializer
     del ObjectsRepository
+    return retCode
 
-    #===========================================================================
-    # for key in ObjectsRepository.keys():
-    #     print("KEYS> %s" % key)
-    #===========================================================================
- 
-#     key = 'Instances'
-#     if key in ObjectsRepository.keys():
-#         for each in ObjectsRepository[key].items():
-#             print("From Shader >>")
-#             print (each)
-            
-    
+
+
+
+
+
+
+  
 
  
     
