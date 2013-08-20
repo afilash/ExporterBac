@@ -102,5 +102,27 @@ def is_dupli_child(object_name):
     else:
         return False
     
+
+def resolution(scene):
+    '''
+    scene        bpy.types.scene
+    Calculate the output render resolution
+    Returns        tuple(2) (floats)
+    '''
+    xr = scene.render.resolution_x * scene.render.resolution_percentage / 100.0
+    yr = scene.render.resolution_y * scene.render.resolution_percentage / 100.0
     
-        
+    return int(xr), int(yr)
+
+
+def get_instance_materials(ob):
+    obmats = []
+    # Grab materials attached to object instances ...
+    if hasattr(ob, 'material_slots'):
+        for ms in ob.material_slots:
+            obmats.append(ms.material)
+    # ... and to the object's mesh data
+#     if hasattr(ob.data, 'materials'):
+#         for m in ob.data.materials:
+#             obmats.append(m)
+    return obmats
