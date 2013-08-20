@@ -78,14 +78,14 @@ def getExporter(filepath , scenename='', framenumber=1):
     retCode = Serializer.makeSunflowSCFiles()
     
     
-#     print("{")
-#     for keys in ObjectsRepository.keys():
-#         print("'%s':" % keys)
-#         print(ObjectsRepository[keys])
-#         print(",")
-# #         for each in ObjectsRepository[keys].items():
-# #             print(each)
-#     print("}")
+    print("{")
+    for keys in ObjectsRepository.keys():
+        print("'%s':" % keys)
+        print(ObjectsRepository[keys])
+        print(",")
+#         for each in ObjectsRepository[keys].items():
+#             print(each)
+    print("}")
     
     
     
@@ -133,7 +133,7 @@ def ObjectsExporter(scene , ObjectsRepository={}, Export_instances=False):
                 ):
                 dupli_list = InstanceExporter(scene , objname , turn_on_motion_blur , mblur_steps)
                 dmix(ObjectsRepository, dupli_list, 'Instances')
-                proxy_list[objname] = True
+                proxy_list[objname] = [cur_object.dupli_type]
                 print ("Instantiated>> %s" % objname)
                 if objname in  MotionBlurList:
                     MotionBlurList.pop(MotionBlurList.index(objname))
@@ -144,17 +144,25 @@ def ObjectsExporter(scene , ObjectsRepository={}, Export_instances=False):
                 ):
                 dupli_list = InstanceExporter(scene , objname , turn_on_motion_blur , mblur_steps)
                 dmix(ObjectsRepository, dupli_list, 'Instances')
-                proxy_list[objname] = True
+                proxy_list[objname] = [cur_object.dupli_type]
                 print ("Instantiated>> %s" % objname)
                 if objname in  MotionBlurList:
                     MotionBlurList.pop(MotionBlurList.index(objname))
             dmix(ObjectsRepository, proxy_list, 'Instantiated')
             
             
-        # filter objects - avoid instances ;         
+        # filter objects - avoid instances ; 
+        print(ObjectsRepository['Instantiated'])         
         noninst = [obj for obj in obj_lst if obj not in ObjectsRepository['Instantiated'].keys() ]
-        obj_lst = noninst 
-        # print(obj_lst)   
+        xlist = [obj for obj in ObjectsRepository['Instantiated'].keys() if ObjectsRepository['Instantiated'][obj][0] in ['GROUP' , 'FRAMES']]
+        
+        u = set(noninst)
+        v = set(xlist)
+        diff = v - u
+        noninst.extend([uniq for uniq in diff])
+        
+        obj_lst = noninst
+        print(xlist)   
     
     ObjectsRepository['ExportedObjects'] = write_mesh_file(obj_lst, scene, not Export_instances , MotionBlurList , scene.camera.data.sunflow_camera.shutterTime)
     

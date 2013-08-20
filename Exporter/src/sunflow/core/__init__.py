@@ -165,7 +165,7 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
                 self.render_preview(scene)
                 return
 
-            print(self.is_animation)
+            # print(self.is_animation)
                         
             scene_path = efutil.filesystem_path(scene.render.filepath)
             if os.path.isdir(scene_path):
@@ -209,7 +209,7 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
                     continue
                 if arguments[key] != '':
                     values = arguments[key].split()
-                    print(values)
+                    # print(values)
                     extra.extend(values)
             
             if arguments['format'] != 'png':
@@ -217,7 +217,7 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             
             cmd_line.extend(extra)
             cmd_line.extend(final_line)
-            print(cmd_line)
+            # print(cmd_line)
             subprocess.Popen(cmd_line)
 
 
@@ -298,27 +298,27 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         # print(cmd_line)
         
         
-        mitsuba_process = subprocess.Popen(cmd_line)
+        sunflow_process = subprocess.Popen(cmd_line)
 
         framebuffer_thread = sunflowFilmDisplay()
         framebuffer_thread.set_kick_period(2) 
         framebuffer_thread.begin(self, output_file[1], resolution(scene))
         render_update_timer = None
-        while mitsuba_process.poll() == None and not self.test_break():
+        while sunflow_process.poll() == None and not self.test_break():
             render_update_timer = threading.Timer(1, self.process_wait_timer)
             render_update_timer.start()
             if render_update_timer.isAlive(): render_update_timer.join()
         
         # If we exit the wait loop (user cancelled) and mitsuba is still running, then send SIGINT
-        if mitsuba_process.poll() == None:
+        if sunflow_process.poll() == None:
             # Use SIGTERM because that's the only one supported on Windows
-            mitsuba_process.send_signal(subprocess.signal.SIGTERM)
+            sunflow_process.send_signal(subprocess.signal.SIGTERM)
         
         # Stop updating the render result and load the final image
         framebuffer_thread.stop()
         framebuffer_thread.join()
         
-        if mitsuba_process.poll() != None and mitsuba_process.returncode != 0:
+        if sunflow_process.poll() != None and sunflow_process.returncode != 0:
             print("MtsBlend: Rendering failed -- check the console")
         else:
             framebuffer_thread.kick(render_end=True)
