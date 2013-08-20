@@ -26,11 +26,16 @@
 
 import math
 
+# def getPos(obj , as_matrix=True):
+#     org_mat = obj.matrix_original.copy()
+#     obj_mat = obj.matrix.copy()
+#     org_mat = org_mat.inverted()
+#     obj_mat = org_mat * obj_mat
+#     matrix_rows = [ "%+0.4f" % element for rows in obj_mat for element in rows ]
+#     return (matrix_rows)
+
 def getPos(obj , as_matrix=True):
-    org_mat = obj.matrix_original.copy()
     obj_mat = obj.matrix.copy()
-    org_mat = org_mat.inverted()
-    obj_mat = org_mat * obj_mat
     matrix_rows = [ "%+0.4f" % element for rows in obj_mat for element in rows ]
     return (matrix_rows)
     

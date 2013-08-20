@@ -89,7 +89,7 @@ def dmix(MasterDict, InputDict , TargetName):
 
 def is_dupli_child(object_name):
     # FIXME: for testing only
-    return False
+    # return False
     if not bpy.context.scene.render.use_instances:
         return False
     if object_name in [ obj.name for obj in  bpy.context.scene.objects]:

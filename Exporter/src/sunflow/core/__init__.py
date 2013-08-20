@@ -153,10 +153,12 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
     
 
     def render(self, scene):
-
+        
         if self is None or scene is None:
             print('ERROR: Scene is missing!')
             return
+        
+        scene.render.use_placeholder = False
         
         with self.render_lock:  # just render one thing at a time
             if scene.name == 'preview':

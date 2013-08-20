@@ -216,8 +216,15 @@ def write_mesh_file(objects_namelist, scene, Donot_Allow_Instancing=True, mblurl
 
             if me is None:
                 continue
-
-            me.transform(EXPORT_GLOBAL_MATRIX * ob_mat)
+            
+            if Donot_Allow_Instancing:
+                me.transform(EXPORT_GLOBAL_MATRIX * ob_mat)
+            
+            else:
+                if ob.parent and ob.parent.dupli_type in {'VERTS', 'FACES'}:
+                    pass
+                else:
+                    me.transform(EXPORT_GLOBAL_MATRIX * ob_mat)
 
             if EXPORT_TRI:
                 # _must_ do this first since it re-allocs arrays
