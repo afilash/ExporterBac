@@ -94,7 +94,9 @@ def is_dupli_child(object_name):
         return False
     if object_name in [ obj.name for obj in  bpy.context.scene.objects]:
         obj = bpy.context.scene.objects[object_name]
-        # print(" %s parent %s " % (object_name, obj.parent.name))        
+        # print(" %s parent %s " % (object_name, obj.parent.name))    
+        if  hasattr(obj , 'dupli_type') and obj.dupli_type in ['GROUP' , 'FRAMES'] :
+            return True
         if  hasattr(obj.parent , 'dupli_type'):
             return obj.parent.dupli_type not in ['NONE']
         else:

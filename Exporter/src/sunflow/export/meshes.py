@@ -218,11 +218,15 @@ def write_mesh_file(objects_namelist, scene, Donot_Allow_Instancing=True, mblurl
                 continue
             
             if Donot_Allow_Instancing:
-                me.transform(EXPORT_GLOBAL_MATRIX * ob_mat)
-            
+                me.transform(EXPORT_GLOBAL_MATRIX * ob_mat)            
             else:
-                if ob.parent and ob.parent.dupli_type in {'VERTS', 'FACES'}:
+                # FIXME: testing chenges on adding 'GROUP' , 'FRAMES'
+                if ob.parent and ob.parent.dupli_type in ['VERTS', 'FACES']:
                     pass
+                elif ob.is_duplicator and ob.dupli_type in ['GROUP' , 'FRAMES']:
+                # elif ob.is_duplicator and ob.dupli_type in ['FRAMES']:
+                    print("Dupli:::::::::::::::::: %s" % ob.dupli_type)
+                    pass 
                 else:
                     me.transform(EXPORT_GLOBAL_MATRIX * ob_mat)
 
