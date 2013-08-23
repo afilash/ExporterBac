@@ -148,6 +148,9 @@ def ObjectsExporter(scene , ObjectsRepository={}, Export_instances=False):
                 print ("Instantiated>> %s" % objname)
                 if objname in  MotionBlurList:
                     MotionBlurList.pop(MotionBlurList.index(objname))
+            # TODO: particle system only with OBJECT or GROUP which means instancing to sunflow. Hair will be handled separate :)
+            # particle system check goes here !
+            
             dmix(ObjectsRepository, proxy_list, 'Instantiated')
             
             
