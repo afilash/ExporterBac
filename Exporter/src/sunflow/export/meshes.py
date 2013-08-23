@@ -185,7 +185,9 @@ def write_mesh_file(objects_namelist, scene, Donot_Allow_Instancing=True, mblurl
                     print("No inst , normal %s" % ob_main_name)
                     transform_matrix = motion_blur_object(scene, ob_main_name, is_dupli, steps)
                 obs = [(ob_main, ob_main.matrix_world)]
-        else:  # Allow_Instancing
+        
+        # Allow_Instancing
+        else:  
             # TODO: need testing on motion blur (normal object / non children )
             if ob_main_name in mblurlist:
                 print("Inst , normal %s" % ob_main_name)
@@ -218,14 +220,11 @@ def write_mesh_file(objects_namelist, scene, Donot_Allow_Instancing=True, mblurl
                 continue
             
             if Donot_Allow_Instancing:
-                me.transform(EXPORT_GLOBAL_MATRIX * ob_mat)            
+                me.transform(EXPORT_GLOBAL_MATRIX * ob_mat)        
             else:
-                # FIXME: testing chenges on adding 'GROUP' , 'FRAMES'
                 if ob.parent and ob.parent.dupli_type in ['VERTS', 'FACES']:
                     pass
-                elif ob.is_duplicator and ob.dupli_type in ['GROUP' , 'FRAMES']:
-                # elif ob.is_duplicator and ob.dupli_type in ['FRAMES']:
-                    print("Dupli:::::::::::::::::: %s" % ob.dupli_type)
+                elif ob.is_duplicator and ob.dupli_type in ['FRAMES', 'GROUP']:
                     pass 
                 else:
                     me.transform(EXPORT_GLOBAL_MATRIX * ob_mat)
@@ -321,7 +320,7 @@ def write_mesh_file(objects_namelist, scene, Donot_Allow_Instancing=True, mblurl
             # Export Faces Data
             Object_data['faces'] = []
             for face , f_index in face_index_pairs:
-                coordinate_str = [ "%06d" % coordinate for coordinate in face.vertices[:] ]
+                coordinate_str = [ "%04d" % coordinate for coordinate in face.vertices[:] ]
                 Object_data['faces'].append(coordinate_str)
             
 

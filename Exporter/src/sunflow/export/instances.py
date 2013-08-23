@@ -25,6 +25,7 @@
 # --------------------------------------------------------------------------
 
 import math
+import mathutils
 
 # def getPos(obj , as_matrix=True):
 #     org_mat = obj.matrix_original.copy()
@@ -34,8 +35,10 @@ import math
 #     matrix_rows = [ "%+0.4f" % element for rows in obj_mat for element in rows ]
 #     return (matrix_rows)
 
-def getPos(obj , as_matrix=True):
+def getPos(obj , as_matrix=True , grp=False):
     obj_mat = obj.matrix.copy()
+    if grp:  # this is to correct some wierdness in group dupli problem.
+        obj_mat = obj_mat * obj.matrix_original.inverted()
     matrix_rows = [ "%+0.4f" % element for rows in obj_mat for element in rows ]
     return (matrix_rows)
     
@@ -46,7 +49,7 @@ def InstanceExporter(scene , objname, turn_on_motion_blur, steps=0):
         dupli_list = {}
         for obj in obj_parent.dupli_list :
             ins = {}
-            pos = getPos(obj, as_matrix=True)   
+            pos = getPos(obj, as_matrix=True , grp=(obj_parent.dupli_type == 'GROUP')) 
             ins['iname'] = "%s.inst.%03d" % (obj_parent.name, obj.index)
             ins['index'] = obj.index
             ins['pname'] = obj.object.name
@@ -76,7 +79,7 @@ def InstanceExporter(scene , objname, turn_on_motion_blur, steps=0):
             scene.frame_set(sub_frame, current_subframe) 
             obj_parent.dupli_list_create(scene)
             for objindx in range(num_dupli) :
-                xpos = getPos(obj_parent.dupli_list[objindx], as_matrix=True)
+                xpos = getPos(obj_parent.dupli_list[objindx], as_matrix=True , grp=(obj_parent.dupli_type == 'GROUP'))
                 transform[objindx].append(xpos)
             obj_parent.dupli_list_clear()
         scene.frame_set(current_frame, current_subframe)
