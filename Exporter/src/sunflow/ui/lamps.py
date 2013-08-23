@@ -93,7 +93,6 @@ class lamps(lamps_panel):
                     col = layout.column()
                 col.prop(lamp.sky, "atmosphere_turbidity", text="Turbidity")
                 col = layout.row()
-                # FIXME: implement lightSunDirection in exporter then uncomment this
                 col.prop(lamp.sunflow_lamp, "lightSunDirection", text="East Direction", expand=False)
 
             # AREA LAMP: Blender Properties

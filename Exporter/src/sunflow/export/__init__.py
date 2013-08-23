@@ -31,6 +31,7 @@ from .shaders import getShadersInScene
 from .lamps import getLamps
 from .illumination import getIlluminationSettings
 from .instances import InstanceExporter
+from .psys import ParticleInstancing
 from .meshes import write_mesh_file
 from .makescfiles import SunflowSCFileSerializer
 from .services import dmix
@@ -149,8 +150,11 @@ def ObjectsExporter(scene , ObjectsRepository={}, Export_instances=False):
                 if objname in  MotionBlurList:
                     MotionBlurList.pop(MotionBlurList.index(objname))
             # TODO: particle system only with OBJECT or GROUP which means instancing to sunflow. Hair will be handled separate :)
-            # particle system check goes here !
-            
+            if (
+                (cur_object.is_duplicator) & 
+                (len(cur_object.particle_systems) > 0)
+                ):
+                pass
             dmix(ObjectsRepository, proxy_list, 'Instantiated')
             
             

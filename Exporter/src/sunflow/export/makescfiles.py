@@ -217,8 +217,6 @@ class SunflowSCFileSerializer():
             if os.path.exists(filename):
                 os.unlink(filename)
         for instancess in self._di['Instantiated'].keys():
-            # FIXME: somethhing is going wrong here while splitting
-            print("Instances   ---> %s" % instancess)
             ins_names = [ instblock for instblock in self._di['Instances'].keys() if instblock.split('.inst.')[0] == instancess]
             for each_inst in ins_names:
                 act_inst = []
