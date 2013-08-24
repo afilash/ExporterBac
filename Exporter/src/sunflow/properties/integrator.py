@@ -280,7 +280,7 @@ class sunflow_integrator(declarative_property_group):
             'type': 'float',
             'attr': 'instantPercentBias',
             'name': 'Percentage Bias',
-            'description': 'Estimate of direct illumination (default 1.0).',
+            'description': 'Estimate of direct illumination, `b` value in percentage (default 1.0).',
             'min': 0.0,
             'max': 100.0,
             'default': 1.0,

@@ -67,10 +67,11 @@ def scene_gi():
             act_Illum.append("%s %s %s" % (space * indent , "global", globalphmap))        
         
     elif gi == 'instantgi':
+        b = float(sunflow_integrator.instantPercentBias) / 100.0
         act_Illum.append("%s %s %s" % (space * indent , "type", "igi"))
         act_Illum.append("%s %s %s" % (space * indent , "samples", sunflow_integrator.instantSamples))
         act_Illum.append("%s %s %s" % (space * indent , "sets", sunflow_integrator.instantSets))
-        act_Illum.append("%s %s %s" % (space * indent , "b", "%+0.4f" % sunflow_integrator.instantPercentBias))
+        act_Illum.append("%s %s %s" % (space * indent , "b", "%+0.4f" % b))
         act_Illum.append("%s %s %s" % (space * indent , "bias-samples", sunflow_integrator.instantBiasSamples))
         
     elif gi == 'pathtracing':

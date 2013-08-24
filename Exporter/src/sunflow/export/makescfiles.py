@@ -182,6 +182,17 @@ class SunflowSCFileSerializer():
         self._write_output_block(block, [""] , [] , self._fh, False)
     
     
+    def _comipleOverideGlobalIllumination(self):
+        '''write Global Illumination Overide block to .sc file'''
+        key = 'override'
+        if key not in self._di.keys():
+            return
+        if 'override' not in self._di[key].keys():
+            return
+        block = self._di[key]['override']
+        self._write_output_block(block, [""] , [] , self._fh, False)
+    
+    
     def _compileMainBlock(self):
         '''write the main .sc file'''
         self._name = ("%s.%03d" % (self._sn , self._fn))
@@ -202,6 +213,7 @@ class SunflowSCFileSerializer():
             self._write_output_block(block, [""] , [] , self._fh, False)
         
         self._comipleGlobalIllumination()
+        self._comipleOverideGlobalIllumination()
         self._comipleShaderBlock()
         self._compileLightsBlock()
         self._compileLightsWorldBlock()
@@ -409,6 +421,8 @@ class SunflowSCFileSerializer():
     
 
     def _compileHairBlock(self):
+        if 'hair' not in self._di.keys():
+            return
         for hair in self._di['hair'].keys():
             fname = "%s.par.sc" % hair
             filename = os.path.join(self._inclf , fname)
@@ -441,6 +455,7 @@ class SunflowSCFileSerializer():
         self._compileInstanceBlocks()
         self._compileHairBlock()
         self._compileMainBlock()
+        
         self._deleteTempFiles()
         return True
         
