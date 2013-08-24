@@ -407,6 +407,27 @@ class SunflowSCFileSerializer():
                     # print("path >> %s" % path)
                     os.unlink(path)
     
+
+    def _compileHairBlock(self):
+        for hair in self._di['hair'].keys():
+            fname = "%s.par.sc" % hair
+            filename = os.path.join(self._inclf , fname)
+            if os.path.exists(filename):
+                os.unlink(filename)
+                
+        for hair in self._di['hair'].keys():            
+            file_ = self._di['hair'][hair]['path']
+            fileobj = open(file_, 'r')
+            fname = "%s.par.sc" % hair
+            filename = os.path.join(self._inclf , fname)
+            if not self._writable(filename):
+                return
+            self._write_output_block([], fileobj, [], filename, True)     
+            fileobj.close()   
+            self._includes.add(fname)    
+        
+    
+    
     def makeSunflowSCFiles(self):
         '''Call this method to generate the .sc, .geo.sc, .ins.sc files'''
         if not self._getFolderPath():
@@ -418,6 +439,7 @@ class SunflowSCFileSerializer():
         self._cleanFolder()
         self._compileObjectBlocks()
         self._compileInstanceBlocks()
+        self._compileHairBlock()
         self._compileMainBlock()
         self._deleteTempFiles()
         return True

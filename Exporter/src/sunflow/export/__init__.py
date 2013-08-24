@@ -32,6 +32,7 @@ from .lamps import getLamps
 from .illumination import getIlluminationSettings
 from .instances import InstanceExporter
 from .psys import ParticleInstancing
+from .psys import getHairParticles
 from .meshes import write_mesh_file
 from .makescfiles import SunflowSCFileSerializer
 from .services import dmix
@@ -46,7 +47,7 @@ def getExporter(filepath , scenename='', framenumber=1):
                 'ExportedObjects':{},
                 'Instances':{},
                 'Instantiated':{},
-                'Particles' :{},
+                'ParticlesHair' :{},
                          }
     
     scene = bpy.context.scene   
@@ -72,9 +73,14 @@ def getExporter(filepath , scenename='', framenumber=1):
     ObjectsRepository = dict_merge(ObjectsRepository , xportdict)
     del xportdict
     
+    # HAIR PARTICLES
+    xportdict = getHairParticles(scene)
+    ObjectsRepository = dict_merge(ObjectsRepository , xportdict)
+    del xportdict
+    
     # MESH EXPORT 
     ObjectsExporter(scene , ObjectsRepository, Export_instances)
-    
+
     Serializer = SunflowSCFileSerializer(ObjectsRepository, filepath, scenename, framenumber)
     retCode = Serializer.makeSunflowSCFiles()
     
@@ -87,8 +93,6 @@ def getExporter(filepath , scenename='', framenumber=1):
 # #         for each in ObjectsRepository[keys].items():
 # #             print(each)
 #     print("}")
-    
-    
     
     # free memory
     del Serializer
