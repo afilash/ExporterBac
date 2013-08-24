@@ -125,7 +125,8 @@ def ObjectsExporter(scene , ObjectsRepository={}, Export_instances=False):
                 mblur_steps = scene.camera.data.sunflow_camera.shutterTime
                 turn_on_motion_blur = True        
             cur_object = scene.objects[objname]
-
+            
+            dupli_list = None
             
             if (
                 (cur_object.is_duplicator) & 
@@ -156,7 +157,13 @@ def ObjectsExporter(scene , ObjectsRepository={}, Export_instances=False):
                 ):
                 print('ParticleInstancing')
                 dupli_list = ParticleInstancing(scene , objname , turn_on_motion_blur , mblur_steps)
-                print(dupli_list)
+                dmix(ObjectsRepository, dupli_list, 'Instances')
+                proxy_list[objname] = [cur_object.dupli_type]
+                print ("Instantiated>> %s" % objname)
+                if objname in  MotionBlurList:
+                    MotionBlurList.pop(MotionBlurList.index(objname))
+            
+            del dupli_list
             dmix(ObjectsRepository, proxy_list, 'Instantiated')
             
             
