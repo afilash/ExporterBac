@@ -31,13 +31,14 @@ import subprocess
 
 
 
-BLENDER_PATH= r"E:/Graphics/BlenderFoundation/blender-2.68-RC1-windows32/blender.exe"
+BLENDER_PATH = r"E:/Graphics/BlenderFoundation/blender-2.68-RC1-windows32/blender.exe"
 FILE_PATH = r"E:/DevelProjects/gitRepository/sfrsTest/sfrsTest/src/blends/casestudies/testblender.blend"
 
 
 
 def copyroot():
-    dest_dir =r"C:\Users\AppleCart\AppData\Roaming\Blender Foundation\Blender\2.67\scripts\addons\sunflow"
+    return
+    dest_dir = r"C:\Users\AppleCart\AppData\Roaming\Blender Foundation\Blender\2.67\scripts\addons\sunflow"
     source_dir = r"./sunflow"
     
     #----------------------------------------------------------- print os.curdir
@@ -46,19 +47,20 @@ def copyroot():
     #------------------------------------- shutil.copytree(source_dir, dest_dir)
     
     
-    print ("Current directory  %s"  %(os.curdir))
-    print ("Removing directory %s"  %(dest_dir))
+    print ("Current directory  %s" % (os.curdir))
+    print ("Removing directory %s" % (dest_dir))
     if os.path.exists(dest_dir):
-        shutil.rmtree(path=dest_dir )
-    print ("Copying directory  %s"  %(source_dir))
+        shutil.rmtree(path=dest_dir)
+    print ("Copying directory  %s" % (source_dir))
     shutil.copytree(source_dir, dest_dir)
     
     print("Done!")
     
 def pathprt():
-    print os.curdir
-    print os.listdir(".")
+    print (os.curdir)
+    print (os.listdir("."))
 
 if __name__ == '__main__':
+    print("Copy not allowed. Editing the orginal files.")
     copyroot()
 #    pathprt()

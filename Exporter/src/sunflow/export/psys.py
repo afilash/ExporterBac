@@ -25,5 +25,63 @@
 # --------------------------------------------------------------------------
 
 
-def ParticleInstancing():
-    pass
+def getPos(obj , as_matrix=True):
+    obj_mat = obj.matrix.copy()
+    matrix_rows = [ "%+0.4f" % element for rows in obj_mat for element in rows ]
+    return (matrix_rows)
+
+
+def ParticleInstancing(scene , objname , motion_blur , mblur_steps):
+    
+    if not motion_blur:
+        print('no mblur')
+        dupli_list = {}
+        
+        obj = scene.objects[objname]
+        if not hasattr(obj, 'modifiers'):
+            print('no attr modifi')
+            return dupli_list
+        
+        for mod in obj.modifiers :
+            print(mod.type)
+            if mod.type == 'PARTICLE_SYSTEM':
+                psys = mod.particle_system
+                if psys.settings.type != 'HAIR':
+                    print('not hair')
+                    continue
+                if psys.settings.render_type not in ['OBJECT', 'GROUP']:
+                    print(psys.settings.render_type)
+                    continue                
+                
+                obj.dupli_list_create(scene)
+                for ob in obj.dupli_list:
+                    if ob.hide :
+                        print('hide')
+                        continue
+                    ins = {}  
+                    pos = getPos(ob, as_matrix=True) 
+                    ins['iname'] = "%s.inst.%03d" % (obj.name, ob.index)
+                    ins['index'] = ob.index
+                    ins['pname'] = ob.object.name
+                    ins['trans'] = [pos]
+                    dupli_list[ ins['iname'] ] = ins
+                obj.dupli_list_clear()
+        return dupli_list
+                    
+                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    

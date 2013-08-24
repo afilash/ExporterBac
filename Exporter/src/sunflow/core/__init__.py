@@ -79,6 +79,15 @@ import shutil
 
 
 
+# FIXME: only for debug
+DEBUG = True
+if DEBUG:
+    import sys
+    sys.path.append(os.environ['PYDEV_DEBUG_PATH'])
+    import pydevd
+
+
+
 def _register_elm(elm, required=False):
     try:
         elm.COMPAT_ENGINES.add('SUNFLOW_RENDER')
@@ -177,6 +186,9 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             if not os.path.exists(output_dir):
                 os.mkdir(output_dir)
             # print('Sunflow: Current directory = "%s"' % output_dir)
+            
+            # FIXME: only for debug
+            if DEBUG: pydevd.settrace()
             
             if not getExporter (output_dir, scene.name, scene.frame_current):
                 return 

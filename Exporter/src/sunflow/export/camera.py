@@ -137,10 +137,10 @@ def getActiveCamera(scene=None):
             if (shift) != (0.0, 0.0):
                 act_cam.append("%s %s %s" % (space * indent , "shift", "%+0.4f %+0.4f" % shift)) 
                 
-        if (cam.cameraType == "thinlens"):
+        if (cam.cameraType == "thinlens"):            
+            act_cam.append("%s %s %s" % (space * indent , "fdist", fdist)) 
+            act_cam.append("%s %s %s" % (space * indent , "lensr", lensr)) 
             if cam.dofEnabledScene :
-                act_cam.append("%s %s %s" % (space * indent , "fdist", fdist)) 
-                act_cam.append("%s %s %s" % (space * indent , "lensr", lensr)) 
                 if sides > 3 :
                     act_cam.append("%s %s %s" % (space * indent , "sides", sides)) 
                     act_cam.append("%s %s %s" % (space * indent , "rotation", rotation)) 

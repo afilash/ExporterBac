@@ -79,14 +79,14 @@ def getExporter(filepath , scenename='', framenumber=1):
     retCode = Serializer.makeSunflowSCFiles()
     
     
-    print("{")
-    for keys in ObjectsRepository.keys():
-        print("'%s':" % keys)
-        print(ObjectsRepository[keys])
-        print(",")
-#         for each in ObjectsRepository[keys].items():
-#             print(each)
-    print("}")
+#     print("{")
+#     for keys in ObjectsRepository.keys():
+#         print("'%s':" % keys)
+#         print(ObjectsRepository[keys])
+#         print(",")
+# #         for each in ObjectsRepository[keys].items():
+# #             print(each)
+#     print("}")
     
     
     
@@ -154,7 +154,9 @@ def ObjectsExporter(scene , ObjectsRepository={}, Export_instances=False):
                 (cur_object.is_duplicator) & 
                 (len(cur_object.particle_systems) > 0)
                 ):
-                pass
+                print('ParticleInstancing')
+                dupli_list = ParticleInstancing(scene , objname , turn_on_motion_blur , mblur_steps)
+                print(dupli_list)
             dmix(ObjectsRepository, proxy_list, 'Instantiated')
             
             
