@@ -28,6 +28,7 @@
 
 # System libs
 import os, time, threading, sys, copy, subprocess, random, ctypes
+import datetime
 
 # Blender libs
 import bpy, bl_ui
@@ -229,23 +230,44 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             cmd_line.extend(extra)
             cmd_line.extend(final_line)
             # print(cmd_line)
-            subprocess.Popen(cmd_line)
+            # subprocess.Popen(cmd_line)
+
+            sunflow_process = subprocess.Popen(cmd_line)
+            refresh_interval = 5
+            
+            framebuffer_thread = sunflowFilmDisplay()
+            framebuffer_thread.set_kick_period(refresh_interval) 
+            framebuffer_thread.begin(self, image_file, resolution(scene))
+            render_update_timer = None
+            while sunflow_process.poll() == None and not self.test_break():
+                render_update_timer = threading.Timer(1, self.process_wait_timer)
+                render_update_timer.start()
+                if render_update_timer.isAlive(): render_update_timer.join()
+            
+            # If we exit the wait loop (user cancelled) and mitsuba is still running, then send SIGINT
+            if sunflow_process.poll() == None:
+                # Use SIGTERM because that's the only one supported on Windows
+                sunflow_process.send_signal(subprocess.signal.SIGTERM)
+            
+            # Stop updating the render result and load the final image
+            framebuffer_thread.stop()
+            framebuffer_thread.join()
+            
+            if sunflow_process.poll() != None and sunflow_process.returncode != 0:
+                print("Sunflow: Rendering failed -- check the console")
+            else:
+                framebuffer_thread.kick(render_end=True)
+            framebuffer_thread.shutdown()
+                    
+                    
 
 
-    def convert_idiotic_path_names(self, path):
-        tmp = path
-        GetLongPathName = ctypes.windll.kernel32.GetLongPathNameW
-        buffer = ctypes.create_unicode_buffer(GetLongPathName(tmp, 0, 0))
-        GetLongPathName(tmp, buffer, len(buffer))
-        # print(buffer.value)
-        return buffer.value
-    
+
     
     def render_preview(self, scene):
         (width, height) = resolution(scene)
         if (width < 96 or height < 96):
             return
-        # print('Preview Render Res:  %s %s ' % (width, height))
     
         objects_materials = {}
         for object in [ob for ob in scene.objects if ob.is_visible(scene) and not ob.hide_render]:
@@ -264,13 +286,11 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         if len(likely_materials) < 1:
             return
         
-        tempdir = efutil.temp_directory()
-        matfile = "ObjectMaterial.mat.sc"
-        scenefile = "Scene.sc"
-        outfile = "matpreview.png"
-        output_file = [os.path.abspath(os.path.join(tempdir, scenefile)),
-                       os.path.abspath(os.path.join(tempdir, outfile)),
-                       os.path.abspath(os.path.join(tempdir, matfile)), ]     
+        tempdir = efutil.temp_directory() 
+        scenefile = os.path.abspath(os.path.join(tempdir, "Scene.sc"))
+        outfile = os.path.abspath(os.path.join(tempdir, "matpreview.png"))
+        matfile = os.path.abspath(os.path.join(tempdir, "ObjectMaterial.mat.sc"))        
+        
         pm = likely_materials[0]
         # print(pm)
         mat_dic = create_shader_block(pm)
@@ -287,12 +307,12 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         matgot = mat_dic['Shader'][:]
         matgot[1] = '         name   "ObjectMaterial"'
         out_write = []
-        out_write.append(' image {')
+        out_write.append('image {')
         out_write.append('resolution %s  %s' % (width, height))
         out_write.append('aa 0  1     samples 4     filter mitchell      jitter False       } ')
         out_write.extend(matgot)
         
-        fi = open(output_file[2] , 'w')
+        fi = open(matfile , 'w')
         [ fi.write("\n%s " % line) for line in out_write]
         fi.close()
         src = os.path.join(plugin_path() , "preview", 'Scene.sc')
@@ -304,16 +324,25 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         javapath = efutil.find_config_value('sunflow', 'defaults', 'java_path', '')
         memory = "-Xmx%sm" % efutil.find_config_value('sunflow', 'defaults', 'memoryalloc', '')
         
-        cmd_line = [ javapath , memory , '-server' , '-jar' , jarpath , '-nogui', '-v', '0', '-o', output_file[1] , output_file[0]]     
-        
-        # print(cmd_line)
-        
+        cmd_line = [ 
+                    javapath ,
+                    memory ,
+                    '-server' ,
+                    '-jar' ,
+                    jarpath ,
+                    '-nogui',
+                    '-v',
+                    '0',
+                    '-o',
+                    outfile ,
+                    scenefile
+                    ]     
         
         sunflow_process = subprocess.Popen(cmd_line)
 
         framebuffer_thread = sunflowFilmDisplay()
         framebuffer_thread.set_kick_period(2) 
-        framebuffer_thread.begin(self, output_file[1], resolution(scene))
+        framebuffer_thread.begin(self, outfile, resolution(scene))
         render_update_timer = None
         while sunflow_process.poll() == None and not self.test_break():
             render_update_timer = threading.Timer(1, self.process_wait_timer)
@@ -330,7 +359,7 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         framebuffer_thread.join()
         
         if sunflow_process.poll() != None and sunflow_process.returncode != 0:
-            print("MtsBlend: Rendering failed -- check the console")
+            print("Sunflow: Rendering failed -- check the console")
         else:
             framebuffer_thread.kick(render_end=True)
         framebuffer_thread.shutdown()
@@ -341,13 +370,10 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         pass     
         
         
-    def check_randomname(self , output_dir, image_name):
-        new_name = image_name
-        while (os.path.exists(os.path.join(output_dir, new_name))):
-            num = str(random.randint(10000, 99999))
-            tname = image_name.split('.')
-            tname.insert(-1, num)
-            new_name = '.'.join(tname)
+    def check_randomname(self , output_dir, image_name):        
+        now = datetime.datetime.now()
+        tname = datetime.datetime.strftime(now , "%H%M%S")
+        new_name = '.'.join([image_name, tname])
         return new_name
         
     def getCommandLineArgs(self , scene):
