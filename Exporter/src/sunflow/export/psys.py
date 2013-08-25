@@ -71,7 +71,10 @@ def ParticleInstancing(scene , objname , motion_blur , mblur_steps):
                     obj.dupli_list_clear()
                     
         return dupli_list
+    
 # TODO: motion blur for particle instances.
+
+
 #     else:
 #         dupli_list = {}
 #         
