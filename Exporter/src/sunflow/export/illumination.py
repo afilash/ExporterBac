@@ -25,6 +25,7 @@
 # --------------------------------------------------------------------------
 
 import bpy
+from ..outputs import sunflowLog
 from .services import getObjectPos
 from .services import tr_color_str
 from .services import mix
@@ -261,9 +262,11 @@ def scene_override():
     return ({ 'override' : act_Illum })
     
 
-
-
+#===============================================================================
+# getIlluminationSettings
+#===============================================================================
 def getIlluminationSettings(scene): 
+    
     IllumSettings = {}
     mix(IllumSettings , scene_gi() , 'illumination')    
     mix(IllumSettings , scene_tracedepths() , 'trace')    
@@ -272,14 +275,6 @@ def getIlluminationSettings(scene):
     mix(IllumSettings , scene_bucket() , 'bucket')
     mix(IllumSettings , scene_background() , 'background')
     mix(IllumSettings , scene_override() , 'override')
-    # getCommandLineArgs(IllumSettings)
         
     return IllumSettings
-#     if 'cmd' in IllumSettings.keys():
-#         for each, shdr in IllumSettings['cmd'].items():
-#             print(" %s   %s " % (each, shdr))
-#             for eachline in shdr:
-#                 print (eachline)
 
-if __name__ == '__main__': 
-    getIlluminationSettings()

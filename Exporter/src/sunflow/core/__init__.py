@@ -27,7 +27,7 @@
  
 
 # System libs
-import os, time, threading, sys, copy, subprocess, random, ctypes
+import os, time, threading, sys, copy, subprocess, random, ctypes, shutil
 import datetime
 
 # Blender libs
@@ -44,50 +44,17 @@ from ..export import (getExporter)
 from ..export.services import (resolution , get_instance_materials)
 from ..export.shaders import create_shader_block
 
-
-# from ..export.scene import SceneExporter
-#
-
-
 from ..properties import (camera , render , integrator , lamp , materials , renderlayers , world)
-
-# from ..properties import (
-#    engine, sampler, , lamp, texture,
-#    material, mesh, , world
-# )
-#
-
-
-
-
 
 from ..ui import (camera , render , lamps , materials , renderlayers , world)
 
-# from ..ui import (
-#    render, render_layer, lamps, materials, mesh, 
-#    camera, world
-# )
-#
-
-
-# from ..ui.materials import (
-#    main, subsurface, medium, emitter
-# )
-#
-
 from .. import operators
-import shutil
-
-
-
 
 # DEBUG = True
 # if DEBUG:
 #     import sys
 #     sys.path.append(os.environ['PYDEV_DEBUG_PATH'])
 #     import pydevd
-
-
 
 def _register_elm(elm, required=False):
     try:
@@ -120,7 +87,6 @@ _register_elm(bl_ui.properties_world.WORLD_PT_context_world, required=True)
 _register_elm(bl_ui.properties_world.WORLD_PT_preview, required=True)
 _register_elm(bl_ui.properties_world.WORLD_PT_world, required=True)
 
-
 _register_elm(bl_ui.properties_material.MATERIAL_PT_context_material)
 _register_elm(bl_ui.properties_material.MATERIAL_PT_preview)
 _register_elm(bl_ui.properties_texture.TEXTURE_PT_preview)
@@ -134,9 +100,6 @@ _register_elm(bl_ui.properties_data_camera.DATA_PT_camera_display)
 _register_elm(bl_ui.properties_data_camera.DATA_PT_custom_props_camera)
 
 
-
-
-
 # DEFAULT PANELS
 compatible("properties_data_mesh")
 compatible("properties_texture")
@@ -146,37 +109,28 @@ compatible("properties_data_speaker")
     
     
 
-
-
-
-
-
 @SunflowAddon.addon_register_class
 class RENDERENGINE_sunflow(bpy.types.RenderEngine):
     bl_idname = 'SUNFLOW_RENDER'
     bl_label = 'Sunflow'
     bl_use_preview = True
   
-  
-
     render_lock = threading.Lock()
     
-
     def render(self, scene):
         
         if self is None or scene is None:
-            print('ERROR: Scene is missing!')
+            sunflowLog('ERROR: Scene is missing!')
             return
         
         scene.render.use_placeholder = False
         
         with self.render_lock:  # just render one thing at a time
+            
             if scene.name == 'preview':
                 self.render_preview(scene)
                 return
-
-            # print(self.is_animation)
-                        
+   
             scene_path = efutil.filesystem_path(scene.render.filepath)
             if os.path.isdir(scene_path):
                 output_dir = scene_path
@@ -186,9 +140,8 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             output_dir = os.path.abspath(os.path.join(output_dir , efutil.scene_filename()))            
             if not os.path.exists(output_dir):
                 os.mkdir(output_dir)
-            # print('Sunflow: Current directory = "%s"' % output_dir)
-            
-#             if DEBUG: pydevd.settrace()
+            #----------- sunflowLog('Sunflow: Current directory = "%s"' % output_dir)
+            #--------------------------------------- if DEBUG: pydevd.settrace()
             
             if not getExporter (output_dir, scene.name, scene.frame_current):
                 return 
@@ -199,12 +152,11 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             arguments = self.getCommandLineArgs(scene)
             
             
-                    
-            
             jarpath = efutil.find_config_value('sunflow', 'defaults', 'jar_path', '')
             javapath = efutil.find_config_value('sunflow', 'defaults', 'java_path', '')
             memory = "-Xmx%sm" % efutil.find_config_value('sunflow', 'defaults', 'memoryalloc', '')
             image_name = "%s.%03d.%s" % (scene.name , scene.frame_current, arguments['format'])
+            
             if scene.sunflow_performance.useRandom:
                 image_name = self.check_randomname(output_dir, image_name)
             
@@ -221,7 +173,6 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
                     continue
                 if arguments[key] != '':
                     values = arguments[key].split()
-                    # print(values)
                     extra.extend(values)
             
             if arguments['format'] != 'png':
@@ -229,8 +180,6 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             
             cmd_line.extend(extra)
             cmd_line.extend(final_line)
-            # print(cmd_line)
-            # subprocess.Popen(cmd_line)
 
             sunflow_process = subprocess.Popen(cmd_line)
             refresh_interval = 5
@@ -254,27 +203,23 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             framebuffer_thread.join()
             
             if sunflow_process.poll() != None and sunflow_process.returncode != 0:
-                print("Sunflow: Rendering failed -- check the console")
+                sunflowLog("Sunflow: Rendering failed -- check the console")
             else:
                 framebuffer_thread.kick(render_end=True)
             framebuffer_thread.shutdown()
                     
                     
-
-
-
-    
     def render_preview(self, scene):
         (width, height) = resolution(scene)
         if (width < 96 or height < 96):
             return
     
         objects_materials = {}
-        for object in [ob for ob in scene.objects if ob.is_visible(scene) and not ob.hide_render]:
-            for mat in get_instance_materials(object):
+        for object_ in [ob for ob in scene.objects if ob.is_visible(scene) and not ob.hide_render]:
+            for mat in get_instance_materials(object_):
                 if mat is not None:
-                    if not object.name in objects_materials.keys(): objects_materials[object] = []
-                    objects_materials[object].append(mat)
+                    if not object_.name in objects_materials.keys(): objects_materials[object_] = []
+                    objects_materials[object_].append(mat)
         
         # find objects that are likely to be the preview objects
         preview_objects = [o for o in objects_materials.keys() if o.name.startswith('preview')]
@@ -292,8 +237,8 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         matfile = os.path.abspath(os.path.join(tempdir, "ObjectMaterial.mat.sc"))        
         
         pm = likely_materials[0]
-        # print(pm)
         mat_dic = create_shader_block(pm)
+        
         linenum = 0 
         found = False
         if (('Shader' in mat_dic.keys()) and (len(mat_dic['Shader']) > 0)):
@@ -304,6 +249,7 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
                 linenum += 1
         if not found:
             return
+        
         matgot = mat_dic['Shader'][:]
         matgot[1] = '         name   "ObjectMaterial"'
         out_write = []
@@ -315,10 +261,9 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         fi = open(matfile , 'w')
         [ fi.write("\n%s " % line) for line in out_write]
         fi.close()
-        src = os.path.join(plugin_path() , "preview", 'Scene.sc')
-              
-        shutil.copy(src, tempdir)
         
+        src = os.path.join(plugin_path() , "preview", 'Scene.sc')              
+        shutil.copy(src, tempdir)        
     
         jarpath = efutil.find_config_value('sunflow', 'defaults', 'jar_path', '')
         javapath = efutil.find_config_value('sunflow', 'defaults', 'java_path', '')
@@ -359,16 +304,14 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         framebuffer_thread.join()
         
         if sunflow_process.poll() != None and sunflow_process.returncode != 0:
-            print("Sunflow: Rendering failed -- check the console")
+            sunflowLog("Sunflow: Rendering failed -- check the console")
         else:
             framebuffer_thread.kick(render_end=True)
-        framebuffer_thread.shutdown()
-        
+        framebuffer_thread.shutdown()        
         
     def process_wait_timer(self):
         # Nothing to do here
-        pass     
-        
+        pass
         
     def check_randomname(self , output_dir, image_name):        
         now = datetime.datetime.now()
@@ -428,21 +371,10 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
             argument['ipr'] = '-ipr'
         else:
             argument['ipr'] = ''
-            
-            
-    #     if scene.render.use_instances:
-    #         argument['useinstances'] = True
-    #     else:
-    #         argument['useinstances'] = False
-    
+                
         if getattr(scene , 'camera') is not None:
             argument['format'] = scene.camera.data.sunflow_film.fileExtension
         else:
             argument['format'] = 'png'
             
-        
-              
         return argument
-        
-            
-            

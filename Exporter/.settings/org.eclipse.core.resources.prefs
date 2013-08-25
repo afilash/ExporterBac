@@ -13,6 +13,7 @@ encoding//src/sunflow/export/services.py=utf8
 encoding//src/sunflow/export/shaders.py=utf8
 encoding//src/sunflow/operators/__init__.py=utf8
 encoding//src/sunflow/outputs/__init__.py=utf8
+encoding//src/sunflow/preview/__init__.py=utf8
 encoding//src/sunflow/properties/__init__.py=utf8
 encoding//src/sunflow/properties/camera.py=utf8
 encoding//src/sunflow/properties/integrator.py=utf8

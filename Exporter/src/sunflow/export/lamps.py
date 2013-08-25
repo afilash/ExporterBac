@@ -34,6 +34,9 @@ from .services import mix
 from .services import file_exists
 from .services import getObjectPos
 
+from ..outputs import sunflowLog
+
+
 mappings = {
             'HEMI': 'spherical',
             'AREA': 'meshlight',
@@ -57,7 +60,7 @@ def getObjectLampSize(light):
     
 
 def create_lamp_block(lamp):    
-    # sunflow_lamp
+
     name = lamp.data.type
     sfname = mappings[name]
     act_lit = [] 
@@ -77,8 +80,7 @@ def create_lamp_block(lamp):
         
         act_lit.append("%s %s %s" % (space * indent , "power", "%+0.4f" % lamp.data.sunflow_lamp.lightRadiance))
         pos = getObjectPos(lamp , as_matrix=False)[0]
-        act_lit.append("%s %s %s" % (space * indent , "p    ", pos)) 
-        
+        act_lit.append("%s %s %s" % (space * indent , "p    ", pos))         
     
     elif sfname == 'meshlight':
         act_lit.append("%s %s %s" % (space * indent , "type  ", "meshlight"))   
@@ -126,10 +128,8 @@ def create_lamp_block(lamp):
         position = getObjectPos(lamp , as_matrix=False)
         act_lit.append("%s %s %s" % (space * indent , "source  ", position[0]))
         act_lit.append("%s %s %s" % (space * indent , "target  ", position[1]))
-        
-              
-        # radius = 10 * math.tan(math.radians((lamp.data.spot_size)) / 2.0)
-        # the incomming value is in radians so no need to convert.
+        #----- radius = 10 * math.tan(math.radians((lamp.data.spot_size)) / 2.0)
+        #-------------- the incomming value is in radians so no need to convert.
         radius = 10 * math.tan(lamp.data.spot_size / 2.0)
         
         act_lit.append("%s %s %s" % (space * indent , "radius  ", "%+0.4f" % radius))
@@ -221,12 +221,16 @@ def world_ibl_lighting(scene):
     
     return { 'world' : act_lit }
 
+#===============================================================================
+# getLamps
+#===============================================================================
 def getLamps(scene):
+    
     scene_lamps = [ lm for lm in scene.objects if lm.type == 'LAMP' ]
     SceneLamps = {}
     for lamp in scene_lamps:
         if not hasattr(lamp.data , 'sunflow_lamp'):
-            print("Not sunflow lamp")
+            sunflowLog("Not sunflow lamp")
             continue
         lamps = create_lamp_block(lamp)
         mix(SceneLamps , lamps , lamp.name)   
@@ -235,13 +239,4 @@ def getLamps(scene):
     mix(SceneLamps , world , 'worldlight') 
     
     return SceneLamps
-    
-#     if 'world' in SceneLamps.keys():
-#         for each, shdr in SceneLamps['world'].items():
-#             for eachline in shdr:
-#                 print (eachline)     
 
-
-
-if __name__ == '__main__':
-    getLamps()

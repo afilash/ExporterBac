@@ -27,6 +27,7 @@
 import bpy
 import math
 
+from ..outputs import sunflowLog
 from .services import getObjectPos
 
 
@@ -178,7 +179,7 @@ def getSceneCamera(scene):
     try:
         return getActiveCamera(scene)
     except:
-        print("Exporting camera failed.")
+        sunflowLog("Exporting camera failed.")
         return {}
 
 

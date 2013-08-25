@@ -31,7 +31,7 @@ import math
 from .services import tr_color_str
 from .services import make_path_real
 from .services import mix
-
+from ..outputs import sunflowLog
     
 def texture_path(mat, mat_slot):
     return make_path_real(mat.texture_slots[mat_slot - 1].texture.image.filepath)
@@ -42,7 +42,7 @@ def texture_found(mat, mat_type):
         return 0
     for mat_slot in range(slots):
         slot = mat.texture_slots[mat_slot]
-        # print (slot)
+        # sunflowLog (slot)
         if not slot:
             continue
         if not (hasattr(slot , 'texture') & (slot.texture is not None)):
@@ -292,9 +292,6 @@ def create_shader_block(mat):
         indent -= 1
         type_modifier = True
         
-#     for eachline in act_mod:
-#         print(eachline)
-        
     report = {}
         
     if type_shader:
@@ -317,26 +314,20 @@ def create_shader_block(mat):
     return report
         
 
+#===============================================================================
+# getShadersInScene
+#===============================================================================
 def getShadersInScene(scene):
+    
     scene_mat = bpy.data.materials
     SceneMaterials = {}
     for mat in scene_mat:
         if mat.users <= 0 :
-            print("Material has no owner")
+            sunflowLog("Material has no owner")
             continue
         if not hasattr(mat , 'sunflow_material'):
-            print("Not sunflow material")
+            sunflowLog("Not sunflow material")
             continue
         shaders = create_shader_block(mat)
         mix(SceneMaterials , shaders , mat.name)   
-    return SceneMaterials
-#     for each, shdr in SceneMaterials['shader'].items():
-#         for eachline in shdr:
-#             print (eachline)     
- 
-def working():
-    getShadersInScene()
-
-
-if __name__ == '__main__':
-    working()
+    return SceneMaterials    

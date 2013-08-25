@@ -24,14 +24,13 @@
 # Author                              NodeBench
 # --------------------------------------------------------------------------
 
-
-
 import os
 import bpy
 import copy
 # Framework libs
 from extensions_framework import util as efutil
 
+from ..outputs import sunflowLog
 
 def mix(MasterDict, InputDict , TargetName):
     for keys in InputDict.keys():
@@ -92,7 +91,7 @@ def is_dupli_child(object_name):
         return False
     if object_name in [ obj.name for obj in  bpy.context.scene.objects]:
         obj = bpy.context.scene.objects[object_name]
-        # print(" %s parent %s " % (object_name, obj.parent.name))    
+        # sunflowLog(" %s parent %s " % (object_name, obj.parent.name))    
         if  hasattr(obj , 'dupli_type') and obj.dupli_type in ['GROUP' , 'FRAMES'] :
             return True
         if  hasattr(obj.parent , 'dupli_type'):

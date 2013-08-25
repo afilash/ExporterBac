@@ -28,8 +28,9 @@ import math
 import mathutils
 # Framework libs
 from extensions_framework import util as efutil
-from .services import mix
 
+from .services import mix
+from ..outputs import sunflowLog
 
 def getPos(obj , as_matrix=True):
     obj_mat = obj.matrix.copy()
@@ -166,11 +167,11 @@ def getHairs(ob, mod, psys , hair_name):
     
     indent += 1
     for pindex in range(0, num_parents + num_children):
-        # print("particle " + str(pindex))
+        # sunflowLog("particle " + str(pindex))
         lines = ''
         for step in range(0, steps):
             co = psys.co_hair(ob, mod, pindex, step)
-            # print("step " + str(step) + ": " + str(co))
+            # sunflowLog("step " + str(step) + ": " + str(co))
             lines += "%+0.4f  %+0.4f  %+0.4f   " % (co.x , co.y , co.z)
         outfile.write("\n%s" % lines)
 

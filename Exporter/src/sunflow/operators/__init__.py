@@ -30,6 +30,7 @@ import bpy
 from .. import SunflowAddon
 from extensions_framework import util as efutil
 
+from ..outputs import sunflowLog
 
 
 def save_settings(context):    
@@ -40,14 +41,14 @@ def save_settings(context):
     if os.path.exists(jar_path):
         config_updates['jar_path'] = jar_path
     else:
-        print("Unable to find path jar_path")
+        sunflowLog("Unable to find path jar_path")
     
     java_path = os.path.abspath(efutil.filesystem_path(scene.sunflow_renderconfigure.javaPath))
     # if os.path.isdir(java_path) and os.path.exists(java_path):
     if os.path.exists(java_path):
         config_updates['java_path'] = java_path
     else:
-        print("Unable to find path java_path")
+        sunflowLog("Unable to find path java_path")
         
     
     memoryalloc = scene.sunflow_renderconfigure.memoryAllocated
@@ -57,9 +58,9 @@ def save_settings(context):
     try:
         for k, v in config_updates.items():
             efutil.write_config_value('sunflow', 'defaults', k, v)
-            print("writing values")
+            sunflowLog("writing values")
     except Exception as err:
-        print('WARNING: Saving sunflow configuration failed, please set your user scripts dir: %s' % err)
+        sunflowLog('WARNING: Saving sunflow configuration failed, please set your user scripts dir: %s' % err)
     
 
 

@@ -5,6 +5,7 @@ Created on 16-Aug-2013
 
 import os
 from .services import is_dupli_child
+from ..outputs import sunflowLog
 
 class SunflowSCFileSerializer():
     
@@ -50,7 +51,7 @@ class SunflowSCFileSerializer():
             pushout.close()
             return True
         except Exception as error:
-            print("unable to write to file location %s " % error)
+            sunflowLog("unable to write to file location %s " % error)
             return False
     
     def _getFolderPath_depreciated(self):
@@ -171,7 +172,7 @@ class SunflowSCFileSerializer():
     def _comipleShaderBlock(self):
         '''write shader block to .sc file'''
         if 'Shader' not in self._di.keys():
-            print("No materials found on this scene.")
+            sunflowLog("No materials found on this scene.")
             return
         shader = self._di['Shader'].keys()
         for each_shader in shader:
@@ -244,7 +245,7 @@ class SunflowSCFileSerializer():
                 space = "        "
                  
                 ins = self._di['Instances'][each_inst]
-                # print(ins)
+                # sunflowLog(ins)
                 original_obj = ins['pname']
                 int_blk = []  
 
@@ -362,8 +363,8 @@ class SunflowSCFileSerializer():
             def_block_handle.close()    
             self._includes.add(fname)
         except Exception as error:
-            print("Ignoring object %s due to the following error" % str(objs))
-            print(error)
+            sunflowLog("Ignoring object %s due to the following error" % str(objs))
+            sunflowLog(error)
 
     def __compileObjectBlocksLight(self, objs):
         '''write light block to .geo.sc file'''     
@@ -407,23 +408,23 @@ class SunflowSCFileSerializer():
             def_block_handle.close()    
             self._includes.add(fname)
         except Exception as error:
-            print("Ignoring object %s due to the following error" % str(objs))
-            print(error)
+            sunflowLog("Ignoring object %s due to the following error" % str(objs))
+            sunflowLog(error)
         
   
     def debugPrintDictionary(self):   
         '''print the contents of the dictionary to console'''        
-        print("{")
+        sunflowLog("{")
         for keys in self._di.keys():
-            print("'%s':" % keys)
-            print(self._di[keys])
-            print(",")
-        print("}")
+            sunflowLog("'%s':" % keys)
+            sunflowLog(self._di[keys])
+            sunflowLog(",")
+        sunflowLog("}")
         
     def debugPrintExportedObjects(self):
         '''print the names of the objects which are exported'''
         for keys in self._di['ExportedObjects'].values():
-            print(keys)
+            sunflowLog(keys)
 
 
     def _deleteTempFiles(self):
@@ -433,7 +434,7 @@ class SunflowSCFileSerializer():
             if sub_file in self._di['ExportedObjects'].keys():
                 path = self._di['ExportedObjects'][sub_file]['objectfile']
                 if os.path.exists(path) :
-                    # print("path >> %s" % path)
+                    # sunflowLog("path >> %s" % path)
                     os.unlink(path)
     
 

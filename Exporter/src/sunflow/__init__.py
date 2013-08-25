@@ -29,17 +29,17 @@ import os
 
 bl_info = {
     "name"       : "Sunflow",
-    "description": "Sunflow Render System (v0.07.2) integration for Blender 2.6X",
+    "description": "Sunflow Render System (v0.07.3) integration for Blender (>2.67)",
     "author"     : "Nodebench" ,
     "version"    : (0, 0, 1),
-    "blender"    : (2, 67, 0),
+    "blender"    : (2, 68, 0),
     "api"        : 57908,
     "category"   : "Render",
     "location"   : "Info header > render engine menu",
-    "warning"    : "Development version, may crash",
+    "warning"    : "Pre beta version, may crash , may not work as you expect, Only tested with windows 7.",
     "wiki_url"   : "http://sfwiki.geneome.net/",
     "tracker_url": "https://github.com/nodebench/Exporter/issues",
-    "tooltip"    : "Sunflow Render System (v0.07.2) Exporter",
+    "tooltip"    : "Sunflow Render System (v0.07.3) Exporter",
     "license"    : "GPL Version 2",
     "download"   : "https://github.com/nodebench/Exporter.git",
     "link"       : "http://sunflow.sourceforge.net/"

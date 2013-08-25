@@ -20,14 +20,8 @@
 # --------------------------------------------------------------------------
 # Blender Version                     2.68
 # Exporter Version                    0.0.1
-# Created on                          31-Jul-2013
+# Created on                          14-Aug-2013
 # Author                              NodeBench
-#                                    This code is heavily edited version of 
-#                                    blender's original wavefront 
-#                                    obj exporter code so thanks and 
-#                                    credits goes to blender developers 
-#                                    and the obj exporter author 
-#                                    Campbell Barton
 # --------------------------------------------------------------------------
 
 # import os
@@ -38,13 +32,9 @@ import math
 import mathutils
 # Framework libs
 from extensions_framework import util as efutil
+from ..outputs import sunflowLog
 
 
-
-
-#===============================================================================
-# getPos
-#===============================================================================
 def MatixToString(obj_mat, duplis):
     if duplis:
         matrix_rows = [] 
@@ -54,10 +44,8 @@ def MatixToString(obj_mat, duplis):
         matrix_rows = [ "%+0.4f" % element for rows in obj_mat for element in rows ]
     return (matrix_rows)
     
-
-
 def motion_blur_object(scene , obj_name , duplis , steps):
-    print("<<<<motion_blur_object>>>>")
+    sunflowLog("motion_blur_object %s" % obj_name)
     current_frame , current_subframe = (scene.frame_current, scene.frame_subframe)
     mb_start = current_frame - math.ceil(steps / 2) + 1
     frame_steps = [ mb_start + n for n in range(0, steps) ]
@@ -96,17 +84,11 @@ def motion_blur_object(scene , obj_name , duplis , steps):
     del base_matrix
     return matrices
 
-
-
-
-
-
 def name_compat(name):
     if name is None:
         return 'None'
     else:
         return name.replace(' ', '_')
-
 
 def mesh_triangulate(me):
     import bmesh
@@ -116,7 +98,10 @@ def mesh_triangulate(me):
     bm.to_mesh(me)
     bm.free()
 
-    # FIXME: object visible ?? hide_render ???
+# FIXME: object visible ?? hide_render ???
+#===============================================================================
+# write_mesh_file
+#===============================================================================
 def write_mesh_file(objects_namelist, scene, Donot_Allow_Instancing=True, mblurlist=[] , steps=0):
     """
     Basic Mesh Export function. This will directly write to a temp file. 
@@ -145,9 +130,6 @@ def write_mesh_file(objects_namelist, scene, Donot_Allow_Instancing=True, mblurl
     def veckey2d(v):
         return round(v[0], 6), round(v[1], 6)
 
-    # time1 = time.time()
-
-
     # Get all meshes
     for ob_main_name in objects_namelist:
 
@@ -161,36 +143,33 @@ def write_mesh_file(objects_namelist, scene, Donot_Allow_Instancing=True, mblurl
             # ignore dupli children
             if ob_main.parent and ob_main.parent.dupli_type in {'VERTS', 'FACES'}:
                 # XXX
-                print(ob_main.name, 'is a dupli child - ignoring')
+                sunflowLog('%s is a dupli child - ignoring' % ob_main.name)
                 continue
 
             if ob_main.dupli_type != 'NONE':
                 is_dupli = True
-                # TODO: need testing on motion blur (parent)
                 if ob_main_name in mblurlist: 
-                    print("No inst , duplis %s" % ob_main_name)
+                    sunflowLog("No inst , duplis %s" % ob_main_name)
                     transform_matrix = motion_blur_object(scene, ob_main_name, is_dupli , steps)
                 
                 # XXX
-                print('creating dupli_list on', ob_main.name)
+                sunflowLog('creating dupli_list on %s' % ob_main.name)
                 ob_main.dupli_list_create(scene)
     
                 obs = [(dob.object, dob.matrix) for dob in ob_main.dupli_list]
     
                 # XXX debug print
-                print(ob_main.name, 'has', len(obs), 'dupli children')
+                sunflowLog('%s has %s dupli children' % (ob_main.name, len(obs)))
             else:
-                # TODO: need testing on motion blur (normal object / non children non parent)
                 if ob_main_name in mblurlist:
-                    print("No inst , normal %s" % ob_main_name)
+                    sunflowLog("No inst , normal %s" % ob_main_name)
                     transform_matrix = motion_blur_object(scene, ob_main_name, is_dupli, steps)
                 obs = [(ob_main, ob_main.matrix_world)]
         
         # Allow_Instancing
         else:  
-            # TODO: need testing on motion blur (normal object / non children )
             if ob_main_name in mblurlist:
-                print("Inst , normal %s" % ob_main_name)
+                sunflowLog("Inst , normal %s" % ob_main_name)
                 transform_matrix = motion_blur_object(scene, ob_main_name, is_dupli, steps)
             obs = [(ob_main, ob_main.matrix_world)]
 
@@ -426,40 +405,40 @@ def save_object_data(Object_name="", Object_data={}):
     if 'vertices' in Object_data.keys() and Object_data['vertices'] != [] :
         number_of_vertices = len(Object_data['vertices'])
     else:
-        # print("Object has no vertices")
+        # sunflowLog("Object has no vertices")
         return ''
     
     if 'faces' in Object_data.keys() and Object_data['faces'] != [] :
         number_of_faces = len(Object_data['faces'])
     else:
-        # print("Object has no faces")
+        # sunflowLog("Object has no faces")
         return ''
     
     if  'normal' in Object_data.keys() and Object_data['normal'] != [] :
         if len(Object_data['normal']) != number_of_faces :
-            print("Number of normal vector and faces don't match")
+            sunflowLog("Number of normal vector and faces don't match")
             return ''
         normal_type = 'facevarying'
     else:
-        # print("Object has no normal vector")
+        # sunflowLog("Object has no normal vector")
         normal_type = 'none'
     
     if 'uv' in Object_data.keys()  and Object_data['uv'] != [] :
         if len(Object_data['uv']) != number_of_faces :
-            print("Number of uv's and faces don't match")
+            sunflowLog("Number of uv's and faces don't match")
             return ''
         uv_type = 'facevarying'
     else:
-        # print("Object has no uv's defined")
+        # sunflowLog("Object has no uv's defined")
         uv_type = 'none'
     
     if 'matindex' in Object_data.keys()  and Object_data['matindex'] != [] :
         if len(Object_data['matindex']) != number_of_faces :
-            print("Number of matindex's and faces don't match")
+            sunflowLog("Number of matindex's and faces don't match")
             return ''
         matindex_type = 'face_shaders'
     else:
-        # print("Object has no face shaders's defined")
+        # sunflowLog("Object has no face shaders's defined")
         matindex_type = ''
         
     
@@ -516,8 +495,6 @@ def save_object_data(Object_name="", Object_data={}):
             act_obj.append("%s %s %s" % (space * indent , "", item))
         indent -= 1        
     indent -= 1
-
-#------------------------------------------------------------------------------ 
 
     tmpfile = efutil.temp_file(Object_name + ".sc")
     outfile = open(tmpfile, 'w')
