@@ -49,7 +49,8 @@ class SunflowSCFileSerializer():
             pushout = open(filename , 'a')
             pushout.close()
             return True
-        except:
+        except Exception as error:
+            print("unable to write to file location %s " % error)
             return False
     
     def _getFolderPath_depreciated(self):
@@ -85,6 +86,8 @@ class SunflowSCFileSerializer():
     
     def _populate_MeshLightObjects(self):
         '''Identifies the Objects which are assigned with a light shader'''
+        if 'Shaderlight' not in self._di.keys():
+            return
         light_mat = self._di['Shaderlight'].keys()
         if len(light_mat) <= 0:
             return
@@ -98,7 +101,9 @@ class SunflowSCFileSerializer():
         
         
     def _populate_modifiers(self):
-        '''fill up the blank modifier list with modifiers if not supply with None''' 
+        '''fill up the blank modifier list with modifiers if not supply with None'''
+        if 'Shadermodifier' not in self._di.keys():
+            return 
         mod_mat = self._di['Shadermodifier'].keys()
         exported = self._di['ExportedObjects']
         for obj in exported.keys():
@@ -165,6 +170,9 @@ class SunflowSCFileSerializer():
 
     def _comipleShaderBlock(self):
         '''write shader block to .sc file'''
+        if 'Shader' not in self._di.keys():
+            print("No materials found on this scene.")
+            return
         shader = self._di['Shader'].keys()
         for each_shader in shader:
             block = self._di['Shader'][each_shader]
@@ -292,106 +300,115 @@ class SunflowSCFileSerializer():
 
     def __compileObjectBlocksNormal(self, objs):
         '''write objects to .geo.sc file'''
-        main_file, sub_file = objs
-        block_dirct = self._di['ExportedObjects'][sub_file]
-        int_blk = [] 
-        indent = 0
-        space = "        "
-        
-        int_blk.append("%s %s %s" % (space * indent , "object", "{"))
-        indent += 1
-        
-        if not is_dupli_child(sub_file):        
-            num_of_shaders = len(block_dirct['materials'])
-            if  num_of_shaders > 1:
-                int_blk.append("%s %s %s" % (space * indent , "shaders", num_of_shaders))
-                indent += 1
-                for each_shdr in block_dirct['materials']:
-                    int_blk.append("%s %s %s" % (space * indent , "", each_shdr))
-                indent -= 1
-            else:
-                int_blk.append("%s %s %s" % (space * indent , "shader", block_dirct['materials'][0]))        
+        try:
+            main_file, sub_file = objs
+            block_dirct = self._di['ExportedObjects'][sub_file]
+            int_blk = [] 
+            indent = 0
+            space = "        "
             
-            num_of_shaders = len(block_dirct['modifiers'])
-            if  num_of_shaders > 1:
-                int_blk.append("%s %s %s" % (space * indent , "modifiers", num_of_shaders))
-                indent += 1
-                for each_shdr in block_dirct['modifiers']:
-                    int_blk.append("%s %s %s" % (space * indent , "", each_shdr))
-                indent -= 1
-            else:
-                int_blk.append("%s %s %s" % (space * indent , "modifier", block_dirct['modifiers'][0]))
+            int_blk.append("%s %s %s" % (space * indent , "object", "{"))
+            indent += 1
             
-            num_of_transforms = len(block_dirct['trans_mat']) 
-            if num_of_transforms > 0 :
-                int_blk.append("%s %s %s" % (space * indent , "transform", ""))
-                int_blk.append("%s %s %s" % (space * indent , "steps ", num_of_transforms))
-                int_blk.append("%s %s %s" % (space * indent , "times", " 0.0 1.0"))
-                indent += 1
-                for each_trn in block_dirct['trans_mat']:
-                    int_blk.append("%s %s %s" % (space * indent , "row", ' '.join(each_trn)))
-                indent -= 1
+            if not is_dupli_child(sub_file):        
+                num_of_shaders = len(block_dirct['materials'])
+                if  num_of_shaders > 1:
+                    int_blk.append("%s %s %s" % (space * indent , "shaders", num_of_shaders))
+                    indent += 1
+                    for each_shdr in block_dirct['materials']:
+                        int_blk.append("%s %s %s" % (space * indent , "", each_shdr))
+                    indent -= 1
+                else:
+                    int_blk.append("%s %s %s" % (space * indent , "shader", block_dirct['materials'][0]))        
                 
-        else:
-            int_blk.append("%s %s %s" % (space * indent , "noinstance", ""))
-        int_blk.append("%s %s %s" % (space * indent , "type", "generic-mesh"))
-        int_blk.append("%s %s %s" % (space * indent , "name", sub_file))
-        
-        fnl_blk = []
-        fnl_blk.append("%s %s %s" % (space * indent , "}", ""))
-        
-        def_block = block_dirct['objectfile']
-        if not os.path.exists(def_block):
-            return
-        def_block_handle = open(def_block , 'r')
-        fname = "%s.geo.sc" % main_file
-        filename = os.path.join(self._inclf , fname)
-        if not self._writable(filename):
-            return
-        self._write_output_block(int_blk, def_block_handle, fnl_blk, filename, True)    
-        def_block_handle.close()    
-        self._includes.add(fname)
+                num_of_shaders = len(block_dirct['modifiers'])
+                if  num_of_shaders > 1:
+                    int_blk.append("%s %s %s" % (space * indent , "modifiers", num_of_shaders))
+                    indent += 1
+                    for each_shdr in block_dirct['modifiers']:
+                        int_blk.append("%s %s %s" % (space * indent , "", each_shdr))
+                    indent -= 1
+                else:
+                    int_blk.append("%s %s %s" % (space * indent , "modifier", block_dirct['modifiers'][0]))
+                
+                num_of_transforms = len(block_dirct['trans_mat']) 
+                if num_of_transforms > 0 :
+                    int_blk.append("%s %s %s" % (space * indent , "transform", ""))
+                    int_blk.append("%s %s %s" % (space * indent , "steps ", num_of_transforms))
+                    int_blk.append("%s %s %s" % (space * indent , "times", " 0.0 1.0"))
+                    indent += 1
+                    # FIXME: error on joined duplis will look later if bug reapprears                
+                    for each_trn in block_dirct['trans_mat']:
+                        int_blk.append("%s %s %s" % (space * indent , "row", ' '.join(each_trn)))
+                    indent -= 1
+                    
+            else:
+                int_blk.append("%s %s %s" % (space * indent , "noinstance", ""))
+            int_blk.append("%s %s %s" % (space * indent , "type", "generic-mesh"))
+            int_blk.append("%s %s %s" % (space * indent , "name", sub_file))
+            
+            fnl_blk = []
+            fnl_blk.append("%s %s %s" % (space * indent , "}", ""))
+            
+            def_block = block_dirct['objectfile']
+            if not os.path.exists(def_block):
+                return
+            def_block_handle = open(def_block , 'r')
+            fname = "%s.geo.sc" % main_file
+            filename = os.path.join(self._inclf , fname)
+            if not self._writable(filename):
+                return
+            self._write_output_block(int_blk, def_block_handle, fnl_blk, filename, True)    
+            def_block_handle.close()    
+            self._includes.add(fname)
+        except Exception as error:
+            print("Ignoring object %s due to the following error" % str(objs))
+            print(error)
 
     def __compileObjectBlocksLight(self, objs):
         '''write light block to .geo.sc file'''     
-        main_file, sub_file = objs
-        block_dirct = self._di['ExportedObjects'][sub_file]
-        int_blk = [] 
-        indent = 0
-        space = "        "
-        
-        int_blk.append("%s %s %s" % (space * indent , "light", "{"))
-        indent += 1
-        
-        int_blk.append("%s %s %s" % (space * indent , "type", "meshlight"))
-        int_blk.append("%s %s %s" % (space * indent , "name", sub_file))
-        
-        mat = [ mat for mat in self._di['MeshLightObjects'][sub_file].keys()][0]
-        desc = self._di['Shaderlight'][mat]
-        
-        int_blk.extend(desc)
-        
-        fnl_blk = []
-        fnl_blk.append("%s %s %s" % (space * indent , "}", ""))
-        
-        def_block = block_dirct['objectfile']
-        if not os.path.exists(def_block):
-            return
-        def_block_handle = open(def_block , 'r')
-        datablock = []
-        for eachline in def_block_handle:
-            splt = eachline.split()
-            if (('normals' in splt) | ('uvs' in splt) | ('face_shaders' in splt)):
-                break
-            datablock.append(eachline)
-        
-        fname = "%s.geo.sc" % main_file
-        filename = os.path.join(self._inclf , fname)
-        if not self._writable(filename):
-            return
-        self._write_output_block(int_blk, datablock, fnl_blk, filename, False)    
-        def_block_handle.close()    
-        self._includes.add(fname)
+        try:
+            main_file, sub_file = objs
+            block_dirct = self._di['ExportedObjects'][sub_file]
+            int_blk = [] 
+            indent = 0
+            space = "        "
+            
+            int_blk.append("%s %s %s" % (space * indent , "light", "{"))
+            indent += 1
+            
+            int_blk.append("%s %s %s" % (space * indent , "type", "meshlight"))
+            int_blk.append("%s %s %s" % (space * indent , "name", sub_file))
+            
+            mat = [ mat for mat in self._di['MeshLightObjects'][sub_file].keys()][0]
+            desc = self._di['Shaderlight'][mat]
+            
+            int_blk.extend(desc)
+            
+            fnl_blk = []
+            fnl_blk.append("%s %s %s" % (space * indent , "}", ""))
+            
+            def_block = block_dirct['objectfile']
+            if not os.path.exists(def_block):
+                return
+            def_block_handle = open(def_block , 'r')
+            datablock = []
+            for eachline in def_block_handle:
+                splt = eachline.split()
+                if (('normals' in splt) | ('uvs' in splt) | ('face_shaders' in splt)):
+                    break
+                datablock.append(eachline)
+            
+            fname = "%s.geo.sc" % main_file
+            filename = os.path.join(self._inclf , fname)
+            if not self._writable(filename):
+                return
+            self._write_output_block(int_blk, datablock, fnl_blk, filename, False)    
+            def_block_handle.close()    
+            self._includes.add(fname)
+        except Exception as error:
+            print("Ignoring object %s due to the following error" % str(objs))
+            print(error)
         
   
     def debugPrintDictionary(self):   

@@ -47,7 +47,6 @@ def getExporter(filepath , scenename='', framenumber=1):
                 'ExportedObjects':{},
                 'Instances':{},
                 'Instantiated':{},
-                'ParticlesHair' :{},
                          }
     
     scene = bpy.context.scene   
