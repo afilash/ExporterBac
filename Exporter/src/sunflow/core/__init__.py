@@ -372,8 +372,10 @@ class RENDERENGINE_sunflow(bpy.types.RenderEngine):
         
     def check_randomname(self , output_dir, image_name):        
         now = datetime.datetime.now()
-        tname = datetime.datetime.strftime(now , "%H%M%S")
-        new_name = '.'.join([image_name, tname])
+        dateti = datetime.datetime.strftime(now , "%H%M%S")        
+        tname = image_name.split('.')
+        tname.insert(-1, dateti)
+        new_name = '.'.join(tname)
         return new_name
         
     def getCommandLineArgs(self , scene):
